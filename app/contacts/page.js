@@ -8,13 +8,13 @@ export const dynamic = 'force-dynamic'
 const PHONE = '+79002747119'
 const PHONE_DISPLAY = '+7 900 274-71-19'
 const EMAIL = 'b.shape@mail.ru'
-const TG    = 'https://t.me/+aPk5OJJWJoJiYjhi'
-const IG    = 'https://www.instagram.com/apparat_kosmetolog.bs'
+const TG = 'https://t.me/+aPk5OJJWJoJiYjhi'
+const IG = 'https://www.instagram.com/apparat_kosmetolog.bs'
 
 function TelegramIcon({ size = 20 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.14 14.516l-2.98-.924c-.647-.204-.66-.647.136-.958l11.647-4.491c.537-.194 1.006.131.951.078z"/>
+      <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.14 14.516l-2.98-.924c-.647-.204-.66-.647.136-.958l11.647-4.491c.537-.194 1.006.131.951.078z" />
     </svg>
   )
 }
@@ -22,8 +22,57 @@ function TelegramIcon({ size = 20 }) {
 function InstagramIcon({ size = 20 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
     </svg>
+  )
+}
+
+function ContactCard({ icon, label, val, href, color, bg }) {
+  const isExternal = href && href.startsWith('http')
+
+  return (
+    <div
+      className="flex items-center gap-4 p-4 rounded-2xl border border-transparent hover:border-gray-200 hover:shadow-md transition-all duration-200 group cursor-pointer"
+      style={{ background: bg }}
+    >
+      <div
+        className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform duration-200 group-hover:scale-110"
+        style={{ background: color, color: 'white' }}
+      >
+        {icon}
+      </div>
+      <div className="flex-1 min-w-0">
+        <div className="text-xs text-gray-400 font-medium mb-0.5">{label}</div>
+        {href ? (
+          isExternal ? (
+            
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold hover:underline truncate block transition-colors"
+              style={{ color }}
+            >
+              {val}
+            </a>
+          ) : (
+            
+              href={href}
+              className="font-semibold hover:underline truncate block transition-colors"
+              style={{ color }}
+            >
+              {val}
+            </a>
+          )
+        ) : (
+          <div className="font-semibold text-gray-700">{val}</div>
+        )}
+      </div>
+      {href && (
+        <svg className="w-4 h-4 text-gray-300 group-hover:text-gray-400 transition-colors flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+        </svg>
+      )}
+    </div>
   )
 }
 
@@ -115,40 +164,8 @@ export default function ContactsPage() {
 
           <div className="space-y-4">
             <h2 className="text-xl font-bold text-gray-900 mb-5">Контактная информация</h2>
-            {contacts.map(({ icon, label, val, href, color, bg }) => (
-              <div
-                key={label}
-                className="flex items-center gap-4 p-4 rounded-2xl border border-transparent hover:border-gray-200 hover:shadow-md transition-all duration-200 group cursor-pointer"
-                style={{ background: bg }}
-              >
-                <div
-                  className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform duration-200 group-hover:scale-110"
-                  style={{ background: color, color: 'white' }}
-                >
-                  {icon}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-xs text-gray-400 font-medium mb-0.5">{label}</div>
-                  {href ? (
-                    
-                      href={href}
-                      target={href.startsWith('http') ? '_blank' : undefined}
-                      rel="noopener"
-                      className="font-semibold hover:underline truncate block transition-colors"
-                      style={{ color }}
-                    >
-                      {val}
-                    </a>
-                  ) : (
-                    <div className="font-semibold text-gray-700">{val}</div>
-                  )}
-                </div>
-                {href && (
-                  <svg className="w-4 h-4 text-gray-300 group-hover:text-gray-400 transition-colors flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                )}
-              </div>
+            {contacts.map((item) => (
+              <ContactCard key={item.label} {...item} />
             ))}
           </div>
 
