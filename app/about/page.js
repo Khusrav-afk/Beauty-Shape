@@ -1,7 +1,7 @@
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
-
+export const dynamic = 'force-dynamic'
 export const metadata = { title: 'О компании — Beauty Shape' }
 
 export default function AboutPage() {
