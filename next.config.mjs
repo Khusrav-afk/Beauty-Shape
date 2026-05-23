@@ -1,9 +1,3 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  output: 'standalone',
-  experimental: {
-    missingSuspenseWithCSRBailout: false,
-  },
-  headers: async () => [],
-}
+const nextConfig = {}
 export default nextConfig
