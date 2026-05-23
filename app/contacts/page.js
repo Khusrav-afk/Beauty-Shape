@@ -4,7 +4,9 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
 export const dynamic = 'force-dynamic'
+
 const PHONE = '+79002747119'
+const PHONE_DISPLAY = '+7 900 274-71-19'
 const EMAIL = 'b.shape@mail.ru'
 const TG    = 'https://t.me/+aPk5OJJWJoJiYjhi'
 const IG    = 'https://www.instagram.com/apparat_kosmetolog.bs'
@@ -52,7 +54,7 @@ export default function ContactsPage() {
         </svg>
       ),
       label: 'Телефон',
-      val: PHONE,
+      val: PHONE_DISPLAY,
       href: `tel:${PHONE}`,
       color: '#3ECAB4',
       bg: '#f0fdfb',
@@ -72,7 +74,7 @@ export default function ContactsPage() {
     {
       icon: <TelegramIcon size={20} />,
       label: 'Telegram',
-      val: 'Написать в Telegram',
+      val: 'Группа Beauty Shape',
       href: TG,
       color: '#29a9eb',
       bg: '#e0f7fe',
@@ -127,7 +129,7 @@ export default function ContactsPage() {
                   <div className="text-xs text-gray-400 font-medium mb-0.5">{label}</div>
                   {href ? (
                     <a href={href} target={href.startsWith('http') ? '_blank' : undefined} rel="noopener"
-                      className="font-semibold text-gray-900 hover:underline truncate block transition-colors"
+                      className="font-semibold hover:underline truncate block transition-colors"
                       style={{color}}>
                       {val}
                     </a>
@@ -142,23 +144,6 @@ export default function ContactsPage() {
                 )}
               </div>
             ))}
-
-            {/* Social block */}
-            <div className="pt-2">
-              <p className="text-xs text-gray-400 font-medium mb-3">Мы в соцсетях</p>
-              <div className="flex gap-3">
-                <a href={TG} target="_blank" rel="noopener"
-                  className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-white text-sm font-medium transition-all duration-200 hover:scale-105 hover:shadow-lg"
-                  style={{background:'#29a9eb'}}>
-                  <TelegramIcon size={16}/> Telegram
-                </a>
-                <a href={IG} target="_blank" rel="noopener"
-                  className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-white text-sm font-medium transition-all duration-200 hover:scale-105 hover:shadow-lg"
-                  style={{background:'linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)'}}>
-                  <InstagramIcon size={16}/> Instagram
-                </a>
-              </div>
-            </div>
           </div>
 
           {/* Form */}
@@ -202,13 +187,3 @@ export default function ContactsPage() {
                   className="w-full py-3.5 rounded-xl text-white font-semibold text-sm transition-all duration-200 hover:opacity-90 hover:shadow-md hover:-translate-y-0.5 disabled:opacity-60 disabled:translate-y-0"
                   style={{background:'#3ECAB4'}}>
                   {loading ? 'Отправка...' : 'Отправить заявку'}
-                </button>
-              </form>
-            )}
-          </div>
-        </div>
-      </main>
-      <Footer />
-    </>
-  )
-}
