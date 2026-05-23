@@ -1,5 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  staticPageGenerationTimeout: 180,
+  output: 'standalone',
+  experimental: {
+    missingSuspenseWithCSRBailout: false,
+  },
+  headers: async () => [],
 }
 export default nextConfig
