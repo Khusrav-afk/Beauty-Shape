@@ -117,4 +117,132 @@ export default function HomePage() {
               Весь каталог →
             </Link>
           </div>
-          <div className="grid grid-col
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+            {categories.map((cat, i) => (
+              <Link key={cat.slug} href={`/catalog/${cat.slug}`}
+                className="group p-4 rounded-2xl border border-gray-100 bg-white hover:border-teal-200 hover:shadow-md transition-all duration-200 hover:-translate-y-0.5">
+                <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-3 transition-colors"
+                  style={{background: i % 2 === 0 ? '#f0fdfb' : '#fff8f0'}}>
+                  <span className="text-lg">
+                    {['🔴','💜','🔵','⚡','🟢','🌿','💎','✨','🎯','🪡','📡','💆','🔄','🌊','❄️','💪','💧','🔊','⚡','🌟','🫧','🔬','🩱','🎯','⚡','💉','🫁','💡','💪','🌀','🔥','🔭','🎵','🩲'][i] || '⚡'}
+                  </span>
+                </div>
+                <div className="font-medium text-xs text-gray-800 leading-tight group-hover:text-teal-700 transition-colors line-clamp-2">
+                  {cat.name}
+                </div>
+                <div className="text-xs text-gray-400 mt-1">{cat.count} товаров</div>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        {/* HITS */}
+        <section style={{background:'#f8fffe'}} className="py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="flex items-end justify-between mb-8">
+              <div>
+                <p className="text-xs font-semibold tracking-widest uppercase mb-2" style={{color:'#3ECAB4'}}>Популярное</p>
+                <h2 className="text-3xl font-bold text-gray-900">Хиты продаж</h2>
+              </div>
+              <Link href="/catalog" className="text-sm font-medium hidden sm:block hover:underline" style={{color:'#3ECAB4'}}>
+                Все товары →
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {hits.map(product => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* HOW IT WORKS */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 py-16">
+          <div className="text-center mb-10">
+            <p className="text-xs font-semibold tracking-widest uppercase mb-2" style={{color:'#3ECAB4'}}>Просто</p>
+            <h2 className="text-3xl font-bold text-gray-900">Как сделать заказ</h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+            {[
+              { n:'01', title:'Выбираете аппарат', desc:'Изучите каталог. Позвоните или напишите — поможем с выбором под ваши задачи.' },
+              { n:'02', title:'Оставляете заявку', desc:'Нажмите «Купить в 1 клик» — введите имя и телефон. Форма займёт 10 секунд.' },
+              { n:'03', title:'Менеджер звонит', desc:'Свяжемся в течение 30 минут, уточним детали, обсудим доставку и оплату.' },
+              { n:'04', title:'Получаете аппарат', desc:'Доставка по России. После получения — бесплатное обучение по работе на оборудовании.' },
+            ].map(({ n, title, desc }) => (
+              <div key={n} className="text-center p-6 rounded-2xl bg-gray-50 hover:bg-teal-50 transition-colors group">
+                <div className="w-12 h-12 rounded-full text-white font-bold text-lg flex items-center justify-center mx-auto mb-4 transition-transform group-hover:scale-110"
+                  style={{background:'#3ECAB4'}}>
+                  {n}
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-2">{title}</h3>
+                <p className="text-sm text-gray-500 leading-relaxed">{desc}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* CTA */}
+        <section className="mx-4 sm:mx-6 lg:mx-auto max-w-5xl mb-16 rounded-3xl overflow-hidden" style={{background:'linear-gradient(135deg, #3ECAB4, #168d7d)'}}>
+          <div className="px-8 py-12 md:py-16 text-center text-white">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Нужна помощь с выбором?</h2>
+            <p className="text-teal-100 mb-8 text-lg max-w-xl mx-auto">Оставьте номер телефона — перезвоним и подберём оборудование под ваши задачи и бюджет</p>
+            <CtaForm />
+            <p className="text-teal-200 text-xs mt-4">Перезвоним в течение 30 минут в рабочее время</p>
+          </div>
+        </section>
+
+      </main>
+      <Footer />
+    </>
+  )
+}
+
+function ProductCard({ product }) {
+  return (
+    <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5 group">
+      <div className="h-48 flex items-center justify-center relative" style={{background:'linear-gradient(135deg, #f0fdfb, #e6faf7)'}}>
+        {product.isHit && (
+          <span className="absolute top-3 left-3 px-2 py-0.5 text-xs font-semibold text-white rounded-full" style={{background:'#3ECAB4'}}>Хит</span>
+        )}
+        {product.stock === 0 && (
+          <span className="absolute top-3 right-3 px-2 py-0.5 text-xs font-semibold bg-red-100 text-red-600 rounded-full">Нет в наличии</span>
+        )}
+        <div className="text-center text-gray-300">
+          <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="mx-auto mb-2 opacity-40">
+            <rect x="3" y="3" width="18" height="18" rx="2" strokeWidth="1.5"/>
+            <circle cx="12" cy="10" r="3" strokeWidth="1.5"/>
+            <path d="M6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2" strokeWidth="1.5"/>
+          </svg>
+          <p className="text-xs">Фото аппарата</p>
+        </div>
+      </div>
+      <div className="p-4">
+        <p className="text-xs font-semibold tracking-wide uppercase mb-1" style={{color:'#3ECAB4'}}>
+          {product.categorySlug?.replace(/-/g,' ')}
+        </p>
+        <h3 className="font-semibold text-gray-900 text-sm mb-2 leading-tight line-clamp-2 group-hover:text-teal-700 transition-colors">
+          {product.name}
+        </h3>
+        <p className="text-xl font-bold text-gray-900 mb-3">{formatPrice(product.price, product.priceFrom)}</p>
+        <Link href={`/catalog/${product.categorySlug}/${product.slug}`}
+          className="block w-full py-2.5 rounded-xl text-center text-sm font-semibold text-white transition-all duration-200 hover:opacity-90 hover:shadow-md"
+          style={{background: product.stock > 0 ? '#3ECAB4' : '#9CA3AF'}}>
+          {product.stock > 0 ? 'Купить в 1 клик' : 'Нет в наличии'}
+        </Link>
+      </div>
+    </div>
+  )
+}
+
+function CtaForm() {
+  'use client'
+  return (
+    <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+      <input type="tel" placeholder="+7 (___) ___-__-__"
+        className="flex-1 px-4 py-3 rounded-xl text-gray-900 text-sm outline-none focus:ring-2 ring-white/50"/>
+      <button className="px-6 py-3 bg-white font-semibold text-sm rounded-xl hover:bg-gray-50 transition-colors" style={{color:'#168d7d'}}>
+        Жду звонка
+      </button>
+    </div>
+  )
+}
