@@ -2,6 +2,7 @@
 import Link from 'next/link'
 
 const PHONE = '+79002747119'
+const PHONE_DISPLAY = '+7 900 274-71-19'
 const EMAIL = 'b.shape@mail.ru'
 const TG    = 'https://t.me/+aPk5OJJWJoJiYjhi'
 const IG    = 'https://www.instagram.com/apparat_kosmetolog.bs'
@@ -58,23 +59,14 @@ export default function Footer() {
             {/* Social icons */}
             <div className="flex gap-2">
               <a href={TG} target="_blank" rel="noopener"
-                className="w-9 h-9 rounded-xl flex items-center justify-center text-gray-400 transition-all duration-200 hover:scale-110 hover:shadow-lg"
-                style={{'--hover-bg':'#29a9eb'}}
-                onMouseEnter={e => e.currentTarget.style.background='#29a9eb'}
-                onMouseLeave={e => e.currentTarget.style.background='#1f2937'}
-                title="Telegram"
-                data-social
-              >
-                <div className="w-9 h-9 rounded-xl bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-sky-500 hover:text-white transition-all duration-200 hover:scale-110">
-                  <TelegramIcon />
-                </div>
+                className="w-9 h-9 rounded-xl bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-sky-500 hover:text-white transition-all duration-200 hover:scale-110"
+                title="Telegram">
+                <TelegramIcon />
               </a>
               <a href={IG} target="_blank" rel="noopener" title="Instagram"
                 className="w-9 h-9 rounded-xl bg-gray-800 flex items-center justify-center text-gray-400 hover:text-white transition-all duration-200 hover:scale-110"
-                style={{}}
                 onMouseEnter={e => { e.currentTarget.style.background='linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)'; e.currentTarget.style.color='white' }}
-                onMouseLeave={e => { e.currentTarget.style.background='#1f2937'; e.currentTarget.style.color='' }}
-              >
+                onMouseLeave={e => { e.currentTarget.style.background='#1f2937'; e.currentTarget.style.color='' }}>
                 <InstagramIcon />
               </a>
               <a href={`mailto:${EMAIL}`} title="Email"
@@ -131,7 +123,7 @@ export default function Footer() {
               <li>
                 <a href={`tel:${PHONE}`} className="text-sm text-gray-400 hover:text-white transition-colors flex items-center gap-2 group">
                   <span className="text-base">📞</span>
-                  <span className="group-hover:translate-x-0.5 transition-transform">{PHONE}</span>
+                  <span className="group-hover:translate-x-0.5 transition-transform">{PHONE_DISPLAY}</span>
                 </a>
               </li>
               <li>
@@ -154,7 +146,7 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-gray-800 mt-10 pt-6 flex flex-col sm:flex-row justify-between items-center gap-2">
-          <p className="text-xs text-gray-500">© 2025 Beauty Shape. Все права защищены.</p>
+          <p className="text-xs text-gray-500">© 2026 Beauty Shape. Все права защищены.</p>
           <Link href="/privacy" className="text-xs text-gray-500 hover:text-gray-300 transition-colors">
             Политика конфиденциальности
           </Link>
