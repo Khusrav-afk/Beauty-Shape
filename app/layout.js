@@ -1,7 +1,6 @@
-export const dynamic = 'force-dynamic'
-export const revalidate = 0
-
 import './globals.css'
+
+export const dynamic = 'force-dynamic'
 
 export const metadata = {
   title: 'Beauty Shape — Косметологическое оборудование',
