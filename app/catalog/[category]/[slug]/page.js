@@ -13,8 +13,9 @@ export default function ProductPage({ params }) {
     <>
       <Header />
       <div className="max-w-7xl mx-auto px-6 py-20 text-center">
+        <div className="text-6xl mb-4">🔍</div>
         <h1 className="text-2xl font-bold text-gray-900 mb-4">Товар не найден</h1>
-        <Link href="/catalog" className="text-teal-500 hover:underline">Вернуться в каталог</Link>
+        <Link href="/catalog" className="text-teal-500 hover:underline font-medium">Вернуться в каталог</Link>
       </div>
       <Footer />
     </>
@@ -24,7 +25,6 @@ export default function ProductPage({ params }) {
     <>
       <Header />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
-        {/* Breadcrumb */}
         <nav className="flex items-center gap-2 text-xs text-gray-400 mb-8 flex-wrap">
           <Link href="/" className="hover:text-teal-500">Главная</Link>
           <span>/</span>
@@ -32,20 +32,14 @@ export default function ProductPage({ params }) {
           <span>/</span>
           <Link href={`/catalog/${product.categorySlug}`} className="hover:text-teal-500">{category?.name}</Link>
           <span>/</span>
-          <span className="text-gray-700">{product.name}</span>
+          <span className="text-gray-700 line-clamp-1">{product.name}</span>
         </nav>
 
         <div className="grid md:grid-cols-2 gap-10 lg:gap-16">
-          {/* Image */}
           <div>
-            <div className="aspect-square rounded-3xl flex items-center justify-center relative overflow-hidden"
-              style={{background:'linear-gradient(145deg, #f0fdfb, #e0f7f3)'}}>
-              {product.isHit && (
-                <span className="absolute top-4 left-4 px-3 py-1 text-sm font-semibold text-white rounded-full" style={{background:'#3ECAB4'}}>Хит продаж</span>
-              )}
-              {product.stock === 0 && (
-                <span className="absolute top-4 right-4 px-3 py-1 text-sm font-semibold bg-red-100 text-red-600 rounded-full">Нет в наличии</span>
-              )}
+            <div className="aspect-square rounded-3xl flex items-center justify-center relative overflow-hidden" style={{background:'linear-gradient(145deg, #f0fdfb, #e0f7f3)'}}>
+              {product.isHit && <span className="absolute top-4 left-4 px-3 py-1 text-sm font-semibold text-white rounded-full" style={{background:'#3ECAB4'}}>Хит продаж</span>}
+              {product.stock === 0 && <span className="absolute top-4 right-4 px-3 py-1 text-sm font-semibold bg-red-100 text-red-600 rounded-full">Нет в наличии</span>}
               <div className="text-center text-gray-300">
                 <svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="mx-auto mb-3 opacity-30">
                   <rect x="3" y="3" width="18" height="18" rx="2" strokeWidth="1"/>
@@ -56,26 +50,20 @@ export default function ProductPage({ params }) {
                 <p className="text-xs mt-1 opacity-60">Будет добавлено</p>
               </div>
             </div>
-
-            {/* Badges */}
             <div className="flex flex-wrap gap-2 mt-4">
-              <span className="px-3 py-1.5 rounded-lg text-xs font-medium bg-green-50 text-green-700">✓ Гарантия 1 год</span>
-              <span className="px-3 py-1.5 rounded-lg text-xs font-medium bg-blue-50 text-blue-700">✓ Доставка по России</span>
-              <span className="px-3 py-1.5 rounded-lg text-xs font-medium bg-purple-50 text-purple-700">✓ Обучение в подарок</span>
-              {product.stock > 0 && <span className="px-3 py-1.5 rounded-lg text-xs font-medium bg-teal-50 text-teal-700">✓ Есть в наличии</span>}
+              <span className="px-3 py-1.5 rounded-lg text-xs font-medium bg-green-50 text-green-700">Гарантия 1 год</span>
+              <span className="px-3 py-1.5 rounded-lg text-xs font-medium bg-blue-50 text-blue-700">Доставка по России</span>
+              <span className="px-3 py-1.5 rounded-lg text-xs font-medium bg-purple-50 text-purple-700">Обучение в подарок</span>
+              {product.stock > 0 && <span className="px-3 py-1.5 rounded-lg text-xs font-medium bg-teal-50 text-teal-700">Есть в наличии</span>}
             </div>
           </div>
 
-          {/* Info */}
           <div>
             <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{color:'#3ECAB4'}}>{category?.name}</p>
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 leading-tight">{product.name}</h1>
-            <div className="text-3xl font-bold mb-6" style={{color:'#1C1C1C'}}>
-              {formatPrice(product.price, product.priceFrom)}
-            </div>
+            <div className="text-3xl font-bold mb-6 text-gray-900">{formatPrice(product.price, product.priceFrom)}</div>
             <p className="text-gray-600 leading-relaxed mb-6">{product.desc}</p>
 
-            {/* Specs */}
             {Object.keys(product.specs).length > 0 && (
               <div className="mb-6 p-4 rounded-2xl bg-gray-50">
                 <h3 className="font-semibold text-sm text-gray-900 mb-3">Характеристики</h3>
@@ -90,16 +78,12 @@ export default function ProductPage({ params }) {
               </div>
             )}
 
-            {/* Buy Form */}
-            {product.stock > 0
-              ? <BuyForm productName={product.name} />
-              : (
-                <div className="p-4 rounded-2xl bg-red-50 border border-red-100 text-sm text-red-700">
-                  К сожалению, этот аппарат сейчас отсутствует. Оставьте заявку — сообщим о поступлении.
-                  <Link href="/contacts" className="block mt-2 font-semibold underline">Оставить заявку</Link>
-                </div>
-              )
-            }
+            {product.stock > 0 ? <BuyForm productName={product.name} /> : (
+              <div className="p-4 rounded-2xl bg-red-50 border border-red-100 text-sm text-red-700">
+                Этот аппарат сейчас отсутствует. Оставьте заявку — сообщим о поступлении.
+                <Link href="/contacts" className="block mt-2 font-semibold underline">Оставить заявку</Link>
+              </div>
+            )}
           </div>
         </div>
       </main>
@@ -118,7 +102,7 @@ function BuyForm({ productName }) {
     e.preventDefault()
     setLoading(true)
     try {
-      await fetch('/api/orders', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(form) })
+      await fetch('/api/orders', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({...form, productName}) })
     } catch {}
     setLoading(false)
     setSent(true)
@@ -132,13 +116,13 @@ function BuyForm({ productName }) {
         </svg>
       </div>
       <p className="font-semibold text-gray-900">Заявка отправлена!</p>
-      <p className="text-sm text-gray-500 mt-1">Менеджер свяжется с вами в течение 30 минут</p>
+      <p className="text-sm text-gray-500 mt-1">Менеджер свяжется в течение 30 минут</p>
     </div>
   )
 
   if (!open) return (
     <button onClick={() => setOpen(true)}
-      className="w-full py-4 rounded-2xl text-white font-semibold text-base transition-all hover:opacity-90 hover:shadow-lg hover:-translate-y-0.5 active:scale-95"
+      className="w-full py-4 rounded-2xl text-white font-semibold text-base transition-all hover:opacity-90 hover:shadow-lg hover:-translate-y-0.5"
       style={{background:'#3ECAB4'}}>
       Купить в 1 клик
     </button>
@@ -148,16 +132,14 @@ function BuyForm({ productName }) {
     <form onSubmit={handleSubmit} className="space-y-3 p-5 rounded-2xl border border-teal-100" style={{background:'#f8fffe'}}>
       <p className="font-semibold text-gray-900 text-sm">Оставить заявку</p>
       <input required value={form.name} onChange={e => setForm({...form, name:e.target.value})}
-        placeholder="Ваше имя *"
-        className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-teal-400 transition-colors bg-white"/>
+        placeholder="Ваше имя *" className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-teal-400 bg-white"/>
       <input required value={form.phone} onChange={e => setForm({...form, phone:e.target.value})}
-        placeholder="Телефон *" type="tel"
-        className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-teal-400 transition-colors bg-white"/>
+        placeholder="Телефон *" type="tel" className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-teal-400 bg-white"/>
       <textarea value={form.comment} onChange={e => setForm({...form, comment:e.target.value})}
-        rows={2} className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-teal-400 transition-colors resize-none bg-white"/>
+        rows={2} className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-teal-400 resize-none bg-white"/>
       <label className="flex items-start gap-2 text-xs text-gray-500 cursor-pointer">
         <input type="checkbox" required className="mt-0.5 accent-teal-500"/>
-        <span>Соглашаюсь с <Link href="/privacy" className="underline" style={{color:'#3ECAB4'}}>политикой обработки данных</Link></span>
+        <span>Соглашаюсь с политикой обработки данных</span>
       </label>
       <div className="flex gap-2">
         <button type="submit" disabled={loading}
@@ -166,7 +148,7 @@ function BuyForm({ productName }) {
           {loading ? 'Отправка...' : 'Отправить'}
         </button>
         <button type="button" onClick={() => setOpen(false)}
-          className="px-4 py-3 rounded-xl border border-gray-200 text-sm text-gray-500 hover:bg-gray-50 transition-colors">
+          className="px-4 py-3 rounded-xl border border-gray-200 text-sm text-gray-500 hover:bg-gray-50">
           Отмена
         </button>
       </div>
