@@ -29,7 +29,6 @@ function InstagramIcon({ size = 20 }) {
 
 function ContactCard({ icon, label, val, href, color, bg }) {
   const isExternal = href && href.startsWith('http')
-
   return (
     <div
       className="flex items-center gap-4 p-4 rounded-2xl border border-transparent hover:border-gray-200 hover:shadow-md transition-all duration-200 group cursor-pointer"
@@ -45,21 +44,15 @@ function ContactCard({ icon, label, val, href, color, bg }) {
         <div className="text-xs text-gray-400 font-medium mb-0.5">{label}</div>
         {href ? (
           isExternal ? (
-            
-              href={href}
-              target="_blank"
-              rel="noopener noreferrer"
+            <a href={href} target="_blank" rel="noopener noreferrer"
               className="font-semibold hover:underline truncate block transition-colors"
-              style={{ color }}
-            >
+              style={{ color }}>
               {val}
             </a>
           ) : (
-            
-              href={href}
+            <a href={href}
               className="font-semibold hover:underline truncate block transition-colors"
-              style={{ color }}
-            >
+              style={{ color }}>
               {val}
             </a>
           )
@@ -161,7 +154,6 @@ export default function ContactsPage() {
         </div>
 
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12 grid md:grid-cols-2 gap-10 items-start">
-
           <div className="space-y-4">
             <h2 className="text-xl font-bold text-gray-900 mb-5">Контактная информация</h2>
             {contacts.map((item) => (
@@ -229,7 +221,6 @@ export default function ContactsPage() {
               </form>
             )}
           </div>
-
         </div>
       </main>
       <Footer />
