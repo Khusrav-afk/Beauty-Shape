@@ -1,4 +1,4 @@
-'use client'
+\'use client'
 import { useState } from 'react'
 import Link from 'next/link'
 import Header from '@/components/Header'
@@ -113,8 +113,10 @@ export default function ProductPage({ params }) {
                   </div>
                   <div>
                     <p className="text-sm font-semibold text-amber-800 mb-1">Обучение приобретается отдельно</p>
-                    <p className="text-xs text-amber-700 mb-2">Для работы на этом аппарате требуется специализированный курс Учебного центра.</p>
-                    <Link href="/training" className="inline-flex items-center gap-1 text-xs font-semibold text-amber-700 hover:text-amber-900 underline">
+                    <p className="text-xs text-amber-700 mb-2">Для работы на этом аппарате требуется специализированный курс. Проходится до начала работы.</p>
+                    <Link href="/training"
+                      className="inline-flex items-center gap-2 text-xs font-bold px-3 py-1.5 rounded-lg transition-colors hover:opacity-90"
+                      style={{background:'#c05621', color:'white'}}>
                       Посмотреть прайс Учебного центра →
                     </Link>
                   </div>
@@ -130,7 +132,7 @@ export default function ProductPage({ params }) {
                   </div>
                   <div>
                     <p className="text-sm font-semibold text-teal-800">Полноценное бесплатное обучение после покупки</p>
-                    <p className="text-xs text-teal-600 mt-0.5">Онлайн или оффлайн — на выбор</p>
+                    <p className="text-xs text-teal-600 mt-0.5">Онлайн или оффлайн — на выбор клиента</p>
                   </div>
                 </div>
               </div>
