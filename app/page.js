@@ -326,81 +326,121 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Карточки ТК с логотипами */}
-            <div className="grid sm:grid-cols-3 gap-5 mb-10">
+            {/* Карточки ТК — единый шаблон */}
+            <div className="grid sm:grid-cols-3 gap-6 mb-10">
 
-              {/* СДЭК */}
-              <div className="bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-lg hover:border-green-100 transition-all duration-200 group">
-                <div className="mb-5">
-                  {/* СДЭК SVG логотип */}
-                  <svg viewBox="0 0 140 44" className="h-10 w-auto" xmlns="http://www.w3.org/2000/svg">
-                    <rect width="140" height="44" rx="8" fill="#00A651"/>
-                    {/* Стилизованный треугольник-стрелка слева */}
-                    <path d="M10 34 L10 10 L24 22 Z" fill="white" opacity="0.9"/>
-                    {/* Текст СДЭК */}
-                    <text x="32" y="30" fontFamily="Arial Black, sans-serif" fontWeight="900" fontSize="20" fill="white" letterSpacing="2">СДЭК</text>
+              {/* ——— СДЭК ——— */}
+              <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                <div className="flex items-center justify-center py-8 px-8" style={{background:'#00A651', minHeight:'120px'}}>
+                  <svg viewBox="0 0 160 90" className="h-20 w-auto" xmlns="http://www.w3.org/2000/svg">
+                    {/* CDEK — латиница, жирный белый, чуть наклонный */}
+                    <text x="80" y="52" textAnchor="middle"
+                      fontFamily="Arial Black, Impact, sans-serif"
+                      fontWeight="900" fontSize="52" fill="white"
+                      letterSpacing="-1">CDEK</text>
+                    {/* Таблетка ОТПРАВКИ */}
+                    <rect x="25" y="62" width="110" height="22" rx="11" fill="none" stroke="white" strokeWidth="2"/>
+                    <text x="80" y="77" textAnchor="middle"
+                      fontFamily="Arial, sans-serif"
+                      fontWeight="700" fontSize="10" fill="white"
+                      letterSpacing="3">ОТПРАВКИ</text>
                   </svg>
                 </div>
-                <h3 className="font-bold text-gray-900 mb-2">СДЭК</h3>
-                <p className="text-sm text-gray-500 leading-relaxed mb-4">Быстрая доставка по всей России. Постаматы и пункты выдачи в 1000+ городах. Курьер до двери.</p>
-                <div className="flex flex-wrap gap-1.5">
-                  {['Вся Россия', 'СНГ', 'Курьер', 'Постаматы'].map(tag => (
-                    <span key={tag} className="text-xs px-2 py-0.5 rounded-full bg-green-50 text-green-700 font-medium">{tag}</span>
-                  ))}
+                <div className="p-5">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-2.5 h-2.5 rounded-full" style={{background:'#00A651'}}/>
+                    <h3 className="font-bold text-gray-900">СДЭК</h3>
+                  </div>
+                  <p className="text-sm text-gray-500 leading-relaxed mb-4">Быстрая доставка по всей России. Постаматы и пункты выдачи в 1000+ городах. Курьер до двери.</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {['Вся Россия', 'СНГ', 'Постаматы', 'Курьер'].map(t => (
+                      <span key={t} className="text-xs px-2 py-0.5 rounded-full font-medium bg-green-50 text-green-700">{t}</span>
+                    ))}
+                  </div>
                 </div>
               </div>
 
-              {/* Яндекс Доставка */}
-              <div className="bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-lg hover:border-red-100 transition-all duration-200 group">
-                <div className="mb-5">
-                  {/* Яндекс Доставка SVG логотип */}
-                  <svg viewBox="0 0 180 44" className="h-10 w-auto" xmlns="http://www.w3.org/2000/svg">
-                    {/* Красный круг с Я */}
-                    <circle cx="22" cy="22" r="22" fill="#FC3F1D"/>
-                    <text x="9" y="31" fontFamily="Arial Black, sans-serif" fontWeight="900" fontSize="26" fill="white">Я</text>
-                    {/* Разделитель */}
-                    <line x1="52" y1="8" x2="52" y2="36" stroke="#e5e7eb" strokeWidth="1.5"/>
-                    {/* Текст */}
-                    <text x="60" y="19" fontFamily="Arial, sans-serif" fontWeight="700" fontSize="12" fill="#1a1a1a">Яндекс</text>
-                    <text x="60" y="34" fontFamily="Arial, sans-serif" fontWeight="700" fontSize="12" fill="#FC3F1D">Доставка</text>
+              {/* ——— Яндекс Доставка ——— */}
+              <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                <div className="flex items-center justify-center py-8 px-8 bg-white" style={{minHeight:'120px'}}>
+                  <svg viewBox="0 0 200 70" className="h-16 w-auto" xmlns="http://www.w3.org/2000/svg">
+                    {/* Оранжевый круг */}
+                    <circle cx="35" cy="35" r="33" fill="#FF6600"/>
+                    {/* Буква Я — белая */}
+                    <text x="35" y="50" textAnchor="middle"
+                      fontFamily="Arial Black, sans-serif"
+                      fontWeight="900" fontSize="38" fill="white">Я</text>
+                    {/* Яндекс — тёмный мелкий */}
+                    <text x="78" y="26"
+                      fontFamily="Arial, sans-serif"
+                      fontWeight="400" fontSize="15" fill="#1a1a1a">Яндекс</text>
+                    {/* Доставка — тёмный крупный */}
+                    <text x="78" y="48"
+                      fontFamily="Arial Black, sans-serif"
+                      fontWeight="900" fontSize="22" fill="#1a1a1a">Доставка</text>
                   </svg>
                 </div>
-                <h3 className="font-bold text-gray-900 mb-2">Яндекс Доставка</h3>
-                <p className="text-sm text-gray-500 leading-relaxed mb-4">Доставка от двери до двери по России и СНГ. Удобное онлайн-отслеживание посылки в реальном времени.</p>
-                <div className="flex flex-wrap gap-1.5">
-                  {['Россия', 'СНГ', 'До двери', 'Трекинг'].map(tag => (
-                    <span key={tag} className="text-xs px-2 py-0.5 rounded-full bg-red-50 text-red-600 font-medium">{tag}</span>
-                  ))}
+                <div className="p-5">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-2.5 h-2.5 rounded-full" style={{background:'#FF6600'}}/>
+                    <h3 className="font-bold text-gray-900">Яндекс Доставка</h3>
+                  </div>
+                  <p className="text-sm text-gray-500 leading-relaxed mb-4">Доставка от двери до двери по России и СНГ. Удобное онлайн-отслеживание в реальном времени.</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {['Россия', 'СНГ', 'До двери', 'Трекинг'].map(t => (
+                      <span key={t} className="text-xs px-2 py-0.5 rounded-full font-medium bg-orange-50 text-orange-600">{t}</span>
+                    ))}
+                  </div>
                 </div>
               </div>
 
-              {/* Деловые Линии */}
-              <div className="bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-lg hover:border-blue-100 transition-all duration-200 group">
-                <div className="mb-5">
-                  {/* Деловые Линии SVG логотип */}
-                  <svg viewBox="0 0 200 44" className="h-10 w-auto" xmlns="http://www.w3.org/2000/svg">
-                    {/* Синий прямоугольник */}
-                    <rect width="200" height="44" rx="8" fill="#004A97"/>
-                    {/* Иконка грузовика/фургона */}
-                    <rect x="8" y="14" width="16" height="12" rx="2" fill="white" opacity="0.9"/>
-                    <rect x="24" y="18" width="8" height="8" rx="1" fill="white" opacity="0.7"/>
-                    <circle cx="13" cy="28" r="3" fill="white"/>
-                    <circle cx="27" cy="28" r="3" fill="white"/>
-                    {/* Горизонтальные линии — "линии" */}
-                    <line x1="36" y1="16" x2="44" y2="16" stroke="white" strokeWidth="2" opacity="0.6"/>
-                    <line x1="36" y1="22" x2="44" y2="22" stroke="white" strokeWidth="2" opacity="0.6"/>
-                    <line x1="36" y1="28" x2="44" y2="28" stroke="white" strokeWidth="2" opacity="0.6"/>
-                    {/* Текст */}
-                    <text x="52" y="19" fontFamily="Arial, sans-serif" fontWeight="700" fontSize="11" fill="white" letterSpacing="0.5">ДЕЛОВЫЕ</text>
-                    <text x="52" y="33" fontFamily="Arial, sans-serif" fontWeight="700" fontSize="11" fill="white" letterSpacing="0.5">ЛИНИИ</text>
+              {/* ——— Деловые Линии ——— */}
+              <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                <div className="flex items-center justify-center py-8 px-8 bg-white" style={{minHeight:'120px'}}>
+                  <svg viewBox="0 0 200 80" className="h-16 w-auto" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                      <linearGradient id="pyramidGold" x1="50%" y1="0%" x2="50%" y2="100%">
+                        <stop offset="0%" stopColor="#F5C842"/>
+                        <stop offset="100%" stopColor="#D4950A"/>
+                      </linearGradient>
+                    </defs>
+                    {/* Лучи из вершины пирамиды */}
+                    <g opacity="0.85">
+                      <line x1="32" y1="4" x2="14" y2="36" stroke="#F5C842" strokeWidth="3" strokeLinecap="round"/>
+                      <line x1="32" y1="4" x2="20" y2="37" stroke="#F5C842" strokeWidth="3" strokeLinecap="round"/>
+                      <line x1="32" y1="4" x2="26" y2="38" stroke="#F5C842" strokeWidth="3" strokeLinecap="round"/>
+                      <line x1="32" y1="4" x2="32" y2="38" stroke="#F5C842" strokeWidth="3.5" strokeLinecap="round"/>
+                      <line x1="32" y1="4" x2="38" y2="38" stroke="#F5C842" strokeWidth="3" strokeLinecap="round"/>
+                      <line x1="32" y1="4" x2="44" y2="37" stroke="#F5C842" strokeWidth="3" strokeLinecap="round"/>
+                      <line x1="32" y1="4" x2="50" y2="36" stroke="#F5C842" strokeWidth="3" strokeLinecap="round"/>
+                    </g>
+                    {/* Треугольник поверх лучей */}
+                    <polygon points="32,2 8,42 56,42" fill="url(#pyramidGold)"/>
+                    {/* ДЕЛОВЫЕ — жирный тёмный + двойная линия справа */}
+                    <text x="66" y="24"
+                      fontFamily="Arial Black, sans-serif"
+                      fontWeight="900" fontSize="17" fill="#1a1a1a" letterSpacing="0.5">ДЕЛОВЫЕ</text>
+                    <line x1="66" y1="29" x2="195" y2="29" stroke="#1a1a1a" strokeWidth="2"/>
+                    <line x1="66" y1="32.5" x2="195" y2="32.5" stroke="#1a1a1a" strokeWidth="1"/>
+                    {/* ЛИНИИ — жирный тёмный + двойная линия справа */}
+                    <text x="66" y="52"
+                      fontFamily="Arial Black, sans-serif"
+                      fontWeight="900" fontSize="17" fill="#1a1a1a" letterSpacing="0.5">ЛИНИИ</text>
+                    <line x1="66" y1="57" x2="170" y2="57" stroke="#1a1a1a" strokeWidth="2"/>
+                    <line x1="66" y1="60.5" x2="170" y2="60.5" stroke="#1a1a1a" strokeWidth="1"/>
                   </svg>
                 </div>
-                <h3 className="font-bold text-gray-900 mb-2">Деловые Линии</h3>
-                <p className="text-sm text-gray-500 leading-relaxed mb-4">Грузовая логистика по всей России. Оптимально для крупногабаритного оборудования. Страхование груза.</p>
-                <div className="flex flex-wrap gap-1.5">
-                  {['Вся Россия', 'Крупный груз', 'Страхование', 'Бизнес'].map(tag => (
-                    <span key={tag} className="text-xs px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 font-medium">{tag}</span>
-                  ))}
+                <div className="p-5">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-2.5 h-2.5 rounded-full" style={{background:'#F5C842'}}/>
+                    <h3 className="font-bold text-gray-900">Деловые Линии</h3>
+                  </div>
+                  <p className="text-sm text-gray-500 leading-relaxed mb-4">Грузовая логистика по России. Оптимально для крупногабаритного оборудования. Страхование груза.</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {['Вся Россия', 'Крупный груз', 'Страхование', 'Бизнес'].map(t => (
+                      <span key={t} className="text-xs px-2 py-0.5 rounded-full font-medium bg-yellow-50 text-yellow-700">{t}</span>
+                    ))}
+                  </div>
                 </div>
               </div>
 
