@@ -397,42 +397,51 @@ export default function HomePage() {
               {/* ——— Деловые Линии ——— */}
               <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
                 <div className="flex items-center justify-center py-8 px-8 bg-white" style={{minHeight:'120px'}}>
-                  <svg viewBox="0 0 200 80" className="h-16 w-auto" xmlns="http://www.w3.org/2000/svg">
+                  <svg viewBox="0 0 200 110" className="h-24 w-auto" xmlns="http://www.w3.org/2000/svg">
+                    {/* Пирамида из диагональных полос — точно как в оригинале */}
                     <defs>
-                      <linearGradient id="pyramidGold" x1="50%" y1="0%" x2="50%" y2="100%">
-                        <stop offset="0%" stopColor="#F5C842"/>
-                        <stop offset="100%" stopColor="#D4950A"/>
-                      </linearGradient>
+                      <clipPath id="triClip">
+                        <polygon points="100,4 28,76 172,76"/>
+                      </clipPath>
                     </defs>
-                    {/* Лучи из вершины пирамиды */}
-                    <g opacity="0.85">
-                      <line x1="32" y1="4" x2="14" y2="36" stroke="#F5C842" strokeWidth="3" strokeLinecap="round"/>
-                      <line x1="32" y1="4" x2="20" y2="37" stroke="#F5C842" strokeWidth="3" strokeLinecap="round"/>
-                      <line x1="32" y1="4" x2="26" y2="38" stroke="#F5C842" strokeWidth="3" strokeLinecap="round"/>
-                      <line x1="32" y1="4" x2="32" y2="38" stroke="#F5C842" strokeWidth="3.5" strokeLinecap="round"/>
-                      <line x1="32" y1="4" x2="38" y2="38" stroke="#F5C842" strokeWidth="3" strokeLinecap="round"/>
-                      <line x1="32" y1="4" x2="44" y2="37" stroke="#F5C842" strokeWidth="3" strokeLinecap="round"/>
-                      <line x1="32" y1="4" x2="50" y2="36" stroke="#F5C842" strokeWidth="3" strokeLinecap="round"/>
+                    {/* Фон треугольника */}
+                    <polygon points="100,4 28,76 172,76" fill="#C89A2A"/>
+                    {/* Диагональные тёмные полосы внутри треугольника — веер из центра основания */}
+                    <g clipPath="url(#triClip)" stroke="#fff" strokeWidth="2.2" opacity="0.45">
+                      <line x1="100" y1="76" x2="40"  y2="4"/>
+                      <line x1="100" y1="76" x2="52"  y2="4"/>
+                      <line x1="100" y1="76" x2="65"  y2="4"/>
+                      <line x1="100" y1="76" x2="78"  y2="4"/>
+                      <line x1="100" y1="76" x2="91"  y2="4"/>
+                      <line x1="100" y1="76" x2="109" y2="4"/>
+                      <line x1="100" y1="76" x2="122" y2="4"/>
+                      <line x1="100" y1="76" x2="135" y2="4"/>
+                      <line x1="100" y1="76" x2="148" y2="4"/>
+                      <line x1="100" y1="76" x2="160" y2="4"/>
                     </g>
-                    {/* Треугольник поверх лучей */}
-                    <polygon points="32,2 8,42 56,42" fill="url(#pyramidGold)"/>
-                    {/* ДЕЛОВЫЕ — жирный тёмный + двойная линия справа */}
-                    <text x="66" y="24"
+                    {/* Контур треугольника */}
+                    <polygon points="100,4 28,76 172,76" fill="none" stroke="#C89A2A" strokeWidth="0.5"/>
+                    {/* ДЕЛОВЫЕ≡ */}
+                    <text x="100" y="94"
+                      textAnchor="middle"
                       fontFamily="Arial Black, sans-serif"
-                      fontWeight="900" fontSize="17" fill="#1a1a1a" letterSpacing="0.5">ДЕЛОВЫЕ</text>
-                    <line x1="66" y1="29" x2="195" y2="29" stroke="#1a1a1a" strokeWidth="2"/>
-                    <line x1="66" y1="32.5" x2="195" y2="32.5" stroke="#1a1a1a" strokeWidth="1"/>
-                    {/* ЛИНИИ — жирный тёмный + двойная линия справа */}
-                    <text x="66" y="52"
+                      fontWeight="900"
+                      fontSize="15"
+                      fill="#C89A2A"
+                      letterSpacing="1">ДЕЛОВЫЕ≡</text>
+                    {/* ЛИНИИ */}
+                    <text x="100" y="110"
+                      textAnchor="middle"
                       fontFamily="Arial Black, sans-serif"
-                      fontWeight="900" fontSize="17" fill="#1a1a1a" letterSpacing="0.5">ЛИНИИ</text>
-                    <line x1="66" y1="57" x2="170" y2="57" stroke="#1a1a1a" strokeWidth="2"/>
-                    <line x1="66" y1="60.5" x2="170" y2="60.5" stroke="#1a1a1a" strokeWidth="1"/>
+                      fontWeight="900"
+                      fontSize="15"
+                      fill="#C89A2A"
+                      letterSpacing="1">ЛИНИИ</text>
                   </svg>
                 </div>
                 <div className="p-5">
                   <div className="flex items-center gap-2 mb-2">
-                    <div className="w-2.5 h-2.5 rounded-full" style={{background:'#F5C842'}}/>
+                    <div className="w-2.5 h-2.5 rounded-full" style={{background:'#C89A2A'}}/>
                     <h3 className="font-bold text-gray-900">Деловые Линии</h3>
                   </div>
                   <p className="text-sm text-gray-500 leading-relaxed mb-4">Грузовая логистика по России. Оптимально для крупногабаритного оборудования. Страхование груза.</p>
