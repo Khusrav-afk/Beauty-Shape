@@ -56,7 +56,6 @@ export default function Footer() {
             </div>
             <p className="text-sm text-gray-400 leading-relaxed mb-5">15 лет на рынке. Прямые поставки. Гарантия 1 год.</p>
 
-            {/* Social icons */}
             <div className="flex gap-2">
               <a href={TG} target="_blank" rel="noopener"
                 className="w-9 h-9 rounded-xl bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-sky-500 hover:text-white transition-all duration-200 hover:scale-110"
@@ -65,8 +64,8 @@ export default function Footer() {
               </a>
               <a href={IG} target="_blank" rel="noopener" title="Instagram"
                 className="w-9 h-9 rounded-xl bg-gray-800 flex items-center justify-center text-gray-400 hover:text-white transition-all duration-200 hover:scale-110"
-                onMouseEnter={e => { e.currentTarget.style.background='linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)'; e.currentTarget.style.color='white' }}
-                onMouseLeave={e => { e.currentTarget.style.background='#1f2937'; e.currentTarget.style.color='' }}>
+                onMouseEnter={e => { e.currentTarget.style.background='linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)' }}
+                onMouseLeave={e => { e.currentTarget.style.background='#1f2937' }}>
                 <InstagramIcon />
               </a>
               <a href={`mailto:${EMAIL}`} title="Email"
