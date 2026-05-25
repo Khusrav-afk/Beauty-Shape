@@ -73,7 +73,7 @@ export default function Header() {
 
           {/* Mobile nav */}
           {mobileOpen && (
-            <div className="md:hidden py-3 border-t border-gray-100 animate-fadeIn">
+            <div className="md:hidden py-3 border-t border-gray-100">
               {[
                 { href:'/catalog', label:'Каталог', icon:'🛍️' },
                 { href:'/training', label:'Обучение', icon:'🎓' },
@@ -98,7 +98,7 @@ export default function Header() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
           style={{background:'rgba(0,0,0,0.5)'}}
           onClick={e => e.target === e.currentTarget && setModalOpen(false)}>
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 animate-fadeIn">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
             <div className="flex items-center justify-between mb-5">
               <h3 className="text-lg font-bold text-gray-900">Оставить заявку</h3>
               <button onClick={() => setModalOpen(false)} className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-gray-400 hover:bg-gray-200 transition-colors">
