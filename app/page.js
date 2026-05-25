@@ -282,21 +282,57 @@ export default function HomePage() {
               <h2 className="text-3xl font-bold text-gray-900">Доставка по России и СНГ</h2>
               <p className="text-gray-500 mt-3 max-w-xl mx-auto">Работаем с любой транспортной компанией на ваш выбор. Согласуем способ при оформлении заказа.</p>
             </div>
-            <div className="grid sm:grid-cols-3 gap-5 mb-6">
-              {[
-                { name: 'СДЭК',             desc: 'Быстрая доставка по всей России. Постаматы и пункты выдачи в 1000+ городах.',      color: '#00a651', bg: '#f0fdf4' },
-                { name: 'Яндекс Доставка',  desc: 'Доставка от двери до двери по России и СНГ. Удобное онлайн-отслеживание.',          color: '#FC3F1D', bg: '#fff7f5' },
-                { name: 'Деловые Линии',    desc: 'Грузовая логистика по России. Оптимально для крупногабаритного оборудования.',      color: '#005BAA', bg: '#f0f5ff' },
-              ].map(({ name, desc, color, bg }) => (
-                <div key={name} className="p-5 rounded-2xl border border-gray-100 bg-white">
-                  <div className="inline-block px-3 py-1.5 rounded-lg text-sm font-bold mb-3" style={{background: bg, color}}>
-                    {name}
-                  </div>
-                  <p className="text-sm text-gray-500 leading-relaxed">{desc}</p>
+
+            <div className="grid sm:grid-cols-3 gap-5 mb-8">
+
+              {/* СДЭК */}
+              <div className="p-6 rounded-2xl border border-gray-100 bg-white hover:shadow-md transition-shadow">
+                <div className="h-12 flex items-center mb-4">
+                  <svg viewBox="0 0 120 40" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-9 w-auto">
+                    <rect width="120" height="40" rx="6" fill="#00A651"/>
+                    <text x="12" y="28" fontFamily="Arial, sans-serif" fontWeight="900" fontSize="22" fill="white" letterSpacing="1">СДЭК</text>
+                  </svg>
                 </div>
-              ))}
+                <p className="text-sm text-gray-600 leading-relaxed">Быстрая доставка по всей России. Постаматы и пункты выдачи в 1000+ городах.</p>
+              </div>
+
+              {/* Яндекс Доставка */}
+              <div className="p-6 rounded-2xl border border-gray-100 bg-white hover:shadow-md transition-shadow">
+                <div className="h-12 flex items-center mb-4">
+                  <svg viewBox="0 0 180 40" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-9 w-auto">
+                    {/* Яндекс лого — красная буква Я + текст */}
+                    <circle cx="20" cy="20" r="20" fill="#FC3F1D"/>
+                    <text x="8" y="28" fontFamily="Arial, sans-serif" fontWeight="900" fontSize="24" fill="white">Я</text>
+                    <text x="48" y="17" fontFamily="Arial, sans-serif" fontWeight="700" fontSize="13" fill="#1a1a1a">Яндекс</text>
+                    <text x="48" y="33" fontFamily="Arial, sans-serif" fontWeight="700" fontSize="13" fill="#1a1a1a">Доставка</text>
+                  </svg>
+                </div>
+                <p className="text-sm text-gray-600 leading-relaxed">Доставка от двери до двери по России и СНГ. Удобное онлайн-отслеживание.</p>
+              </div>
+
+              {/* Деловые Линии */}
+              <div className="p-6 rounded-2xl border border-gray-100 bg-white hover:shadow-md transition-shadow">
+                <div className="h-12 flex items-center mb-4">
+                  <svg viewBox="0 0 200 40" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-9 w-auto">
+                    {/* Синий прямоугольник + белый текст */}
+                    <rect width="200" height="40" rx="6" fill="#005BAA"/>
+                    {/* Стилизованная стрелка-грузовик */}
+                    <path d="M10 28 L10 16 L20 10 L30 16 L30 28 Z" fill="white" opacity="0.3"/>
+                    <path d="M14 28 L14 18 L20 14 L26 18 L26 28" stroke="white" strokeWidth="1.5" fill="none"/>
+                    <text x="36" y="26" fontFamily="Arial, sans-serif" fontWeight="700" fontSize="14" fill="white" letterSpacing="0.3">ДЕЛОВЫЕ ЛИНИИ</text>
+                  </svg>
+                </div>
+                <p className="text-sm text-gray-600 leading-relaxed">Грузовая логистика по России. Оптимально для крупногабаритного оборудования.</p>
+              </div>
+
             </div>
-            <p className="text-center text-sm text-gray-400">А также любая другая транспортная компания по вашему усмотрению</p>
+
+            {/* Любая ТК */}
+            <div className="flex items-center justify-center gap-3">
+              <div className="h-px flex-1 bg-gray-100 max-w-xs"/>
+              <p className="text-sm text-gray-400 text-center">А также любая другая транспортная компания на ваш выбор</p>
+              <div className="h-px flex-1 bg-gray-100 max-w-xs"/>
+            </div>
           </div>
         </section>
 
