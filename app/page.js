@@ -5,6 +5,14 @@ import { categories, getHitProducts, formatPrice } from '@/lib/catalog'
 
 export const dynamic = 'force-dynamic'
 
+// Цветовая палитра для карточек категорий (без эмодзи)
+const CAT_COLORS = [
+  '#3ECAB4', '#5B8DEF', '#F97B6B', '#A78BFA',
+  '#34D399', '#FBBF24', '#60A5FA', '#F472B6',
+  '#4ADE80', '#FB923C', '#38BDF8', '#E879F9',
+  '#2DD4BF', '#818CF8',
+]
+
 export default function HomePage() {
   const hits = getHitProducts()
 
@@ -13,6 +21,7 @@ export default function HomePage() {
       <Header />
       <main>
 
+        {/* Hero */}
         <section className="relative overflow-hidden" style={{background:'linear-gradient(135deg, #f0fdfb 0%, #ffffff 50%, #f8fffe 100%)'}}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-16 md:py-24">
             <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -27,18 +36,21 @@ export default function HomePage() {
                   оборудование
                 </h1>
                 <p className="text-lg text-gray-500 mb-8 leading-relaxed max-w-lg">
-                  HIFU SMAS лифтинг, лазерная эпиляция, RF-омоложение и многое другое. 64 аппарата в 34 категориях. Доставка по России.
+                  HIFU SMAS лифтинг, лазерная эпиляция, RF-омоложение и многое другое. 100+ моделей в 14 категориях. Доставка по России и СНГ.
                 </p>
                 <div className="flex flex-wrap gap-3">
-                  <Link href="/catalog" className="px-6 py-3 rounded-xl text-white font-semibold text-sm hover:opacity-90 transition-opacity" style={{background:'#3ECAB4'}}>
+                  <Link href="/catalog"
+                    className="px-6 py-3 rounded-xl text-white font-semibold text-sm hover:opacity-90 transition-opacity"
+                    style={{background:'#3ECAB4'}}>
                     Смотреть каталог
                   </Link>
-                  <Link href="/contacts" className="px-6 py-3 rounded-xl font-semibold text-sm border border-gray-200 text-gray-700 hover:bg-gray-50 transition-colors">
+                  <Link href="/contacts"
+                    className="px-6 py-3 rounded-xl font-semibold text-sm border border-gray-200 text-gray-700 hover:bg-gray-50 transition-colors">
                     Оставить заявку
                   </Link>
                 </div>
                 <div className="flex gap-8 mt-10">
-                  {[['64+','Аппаратов'],['34','Категорий'],['1 год','Гарантия']].map(([num, label]) => (
+                  {[['100+','Моделей'],['14','Категорий'],['1 год','Гарантия']].map(([num, label]) => (
                     <div key={label}>
                       <div className="text-2xl font-bold text-gray-900">{num}</div>
                       <div className="text-xs text-gray-400 mt-0.5">{label}</div>
@@ -64,15 +76,19 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 py-16">
+        {/* Advantages */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
-              { title:'Гарантия 1 год', desc:'На всё оборудование без исключений' },
-              { title:'Доставка по России', desc:'СДЭК и Деловые Линии' },
-              { title:'Документы', desc:'Сертификаты и инструкции' },
-              { title:'Обучение', desc:'После покупки бесплатно' },
-            ].map(({ title, desc }) => (
+              { title:'Гарантия 1 год', desc:'На всё оборудование без исключений', icon:'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' },
+              { title:'Доставка по России и СНГ', desc:'Любая транспортная компания на выбор клиента', icon:'M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8l1.647 9.172A2 2 0 008.626 19h6.748a2 2 0 001.979-1.828L19 8M10 12h4' },
+              { title:'Документы', desc:'Сертификаты качества и инструкции', icon:'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
+              { title:'Сервисный центр', desc:'Собственный — ремонт и обслуживание', icon:'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z' },
+            ].map(({ title, desc, icon }) => (
               <div key={title} className="p-5 rounded-2xl bg-gray-50 hover:bg-teal-50 transition-colors">
+                <svg className="w-5 h-5 mb-3" style={{color:'#3ECAB4'}} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d={icon}/>
+                </svg>
                 <div className="font-semibold text-sm text-gray-900 mb-1">{title}</div>
                 <div className="text-xs text-gray-500 leading-relaxed">{desc}</div>
               </div>
@@ -80,6 +96,7 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* Categories */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-16">
           <div className="flex items-end justify-between mb-8">
             <div>
@@ -94,8 +111,10 @@ export default function HomePage() {
             {categories.map((cat, i) => (
               <Link key={cat.slug} href={`/catalog/${cat.slug}`}
                 className="group p-4 rounded-2xl border border-gray-100 bg-white hover:border-teal-200 hover:shadow-md transition-all duration-200">
-                <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-3" style={{background: i % 2 === 0 ? '#f0fdfb' : '#fff8f0'}}>
-                  <span className="text-lg">{['🔴','💜','🔵','⚡','🟢','🌿','💎','✨','🎯','🪡','📡','💆','🔄','🌊','❄️','💪','💧','🔊','⚡','🌟','🫧','🔬','🩱','🎯','⚡','💉','🫁','💡','💪','🌀','🔥','🔭','🎵','🩲'][i] || '⚡'}</span>
+                <div
+                  className="w-9 h-9 rounded-xl flex items-center justify-center mb-3"
+                  style={{background: CAT_COLORS[i % CAT_COLORS.length] + '20'}}>
+                  <div className="w-3 h-3 rounded-full" style={{background: CAT_COLORS[i % CAT_COLORS.length]}}/>
                 </div>
                 <div className="font-medium text-xs text-gray-800 leading-tight group-hover:text-teal-700 transition-colors line-clamp-2">{cat.name}</div>
                 <div className="text-xs text-gray-400 mt-1">{cat.count} тов.</div>
@@ -104,6 +123,7 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* Hits */}
         <section style={{background:'#f8fffe'}} className="py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
             <div className="flex items-end justify-between mb-8">
@@ -118,6 +138,10 @@ export default function HomePage() {
                 <div key={product.id} className="bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-200 group">
                   <div className="h-48 flex items-center justify-center relative" style={{background:'linear-gradient(135deg, #f0fdfb, #e6faf7)'}}>
                     {product.isHit && <span className="absolute top-3 left-3 px-2 py-0.5 text-xs font-semibold text-white rounded-full" style={{background:'#3ECAB4'}}>Хит</span>}
+                    {product.stock > 0
+                      ? <span className="absolute top-3 right-3 px-2 py-0.5 text-xs font-semibold rounded-full bg-green-50 text-green-700">В наличии</span>
+                      : <span className="absolute top-3 right-3 px-2 py-0.5 text-xs font-semibold rounded-full bg-gray-100 text-gray-500">Под заказ</span>
+                    }
                     <div className="text-center text-gray-300">
                       <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="mx-auto mb-2 opacity-30">
                         <rect x="3" y="3" width="18" height="18" rx="2" strokeWidth="1.5"/>
@@ -142,6 +166,114 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* Service Center */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 py-16">
+          <div className="mb-10">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold mb-4" style={{background:'#f0fdfb', color:'#168d7d', border:'1px solid #99f4e8'}}>
+              <span className="w-1.5 h-1.5 rounded-full" style={{background:'#3ECAB4'}}/>
+              Собственный
+            </div>
+            <h2 className="text-3xl font-bold text-gray-900 mb-3">Сервисный центр</h2>
+            <p className="text-gray-500 max-w-2xl">У нас собственный сервисный центр — не сторонний подрядчик, а штатные инженеры и склад запасных частей. Ремонтируем быстро и с гарантией.</p>
+          </div>
+
+          {/* Guarantee cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
+            {[
+              {
+                title: 'Гарантия 1 год',
+                desc: 'На всё оборудование с момента покупки. Устраняем любые производственные дефекты бесплатно.',
+                icon: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z',
+                color: '#3ECAB4',
+                bg: '#f0fdfb',
+              },
+              {
+                title: 'Постгарантийное обслуживание',
+                desc: 'После окончания гарантии продолжаем обслуживать аппараты по выгодным ценам. Оригинальные запчасти в наличии.',
+                icon: 'M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z',
+                color: '#3b82f6',
+                bg: '#eff6ff',
+              },
+              {
+                title: 'Долгосрочная техподдержка',
+                desc: 'Консультируем по эксплуатации, помогаем с настройкой. Связь по телефону, Telegram и email.',
+                icon: 'M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z',
+                color: '#8b5cf6',
+                bg: '#f5f3ff',
+              },
+            ].map(({ title, desc, icon, color, bg }) => (
+              <div key={title} className="p-5 rounded-2xl" style={{background: bg}}>
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style={{background: color + '20'}}>
+                  <svg className="w-5 h-5" style={{color}} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d={icon}/>
+                  </svg>
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-2">{title}</h3>
+                <p className="text-sm text-gray-500 leading-relaxed">{desc}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Services accordion — заполните сами */}
+          <div className="border border-gray-100 rounded-2xl overflow-hidden">
+            <div className="px-5 py-3 bg-gray-50 border-b border-gray-100">
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest">Виды работ сервисного центра</p>
+            </div>
+            {[
+              { title: 'Диагностика оборудования', desc: 'Полная техническая диагностика аппарата с выдачей заключения. Время выполнения и стоимость уточняйте у менеджера.' },
+              { title: 'Ремонт аппаратов', desc: 'Ремонт любой сложности. Используем оригинальные запасные части. Уточните виды работ у менеджера — здесь появится подробный прайс.' },
+              { title: 'Замена расходных материалов', desc: 'Замена картриджей, наконечников, манипул. Все расходники в наличии на нашем складе.' },
+              { title: 'Калибровка и настройка', desc: 'Настройка параметров аппарата под конкретные процедуры. Проверка мощности и точности показаний.' },
+              { title: 'Профилактическое обслуживание', desc: 'Плановое ТО для продления срока службы оборудования. Рекомендуем 1 раз в год.' },
+            ].map((item, i) => (
+              <details key={i} className="group border-b border-gray-100 last:border-b-0">
+                <summary className="flex items-center justify-between px-5 py-4 cursor-pointer list-none hover:bg-gray-50 transition-colors">
+                  <span className="font-medium text-sm text-gray-900">{item.title}</span>
+                  <svg className="w-4 h-4 text-gray-400 transition-transform group-open:rotate-180 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7"/>
+                  </svg>
+                </summary>
+                <div className="px-5 pb-4 text-sm text-gray-500 leading-relaxed">{item.desc}</div>
+              </details>
+            ))}
+          </div>
+
+          <div className="mt-6 text-center">
+            <Link href="/contacts"
+              className="inline-block px-6 py-3 rounded-xl text-white font-semibold text-sm hover:opacity-90 transition-opacity"
+              style={{background:'#3ECAB4'}}>
+              Записаться на сервис
+            </Link>
+          </div>
+        </section>
+
+        {/* Delivery */}
+        <section className="py-16" style={{background:'#f8fffe'}}>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="text-center mb-10">
+              <p className="text-xs font-semibold tracking-widest uppercase mb-2" style={{color:'#3ECAB4'}}>Логистика</p>
+              <h2 className="text-3xl font-bold text-gray-900">Доставка по России и СНГ</h2>
+              <p className="text-gray-500 mt-3 max-w-xl mx-auto">Работаем с любой транспортной компанией на ваш выбор. Отправляем от двери до двери — согласуем способ доставки при оформлении заказа.</p>
+            </div>
+            <div className="grid sm:grid-cols-3 gap-5 mb-8">
+              {[
+                { name: 'СДЭК', desc: 'Быстрая доставка по всей России. Постаматы и пункты выдачи в 1000+ городах.', color: '#00a651', bg: '#f0fdf4' },
+                { name: 'Яндекс Доставка', desc: 'Доставка от двери до двери по России и СНГ. Удобное отслеживание.', color: '#FC3F1D', bg: '#fff7f5' },
+                { name: 'Деловые Линии', desc: 'Грузовая логистика по России. Оптимально для крупногабаритного оборудования.', color: '#005BAA', bg: '#f0f5ff' },
+              ].map(({ name, desc, color, bg }) => (
+                <div key={name} className="p-5 rounded-2xl border border-gray-100 bg-white">
+                  <div className="inline-block px-3 py-1.5 rounded-lg text-sm font-bold mb-3" style={{background: bg, color}}>
+                    {name}
+                  </div>
+                  <p className="text-sm text-gray-500 leading-relaxed">{desc}</p>
+                </div>
+              ))}
+            </div>
+            <p className="text-center text-sm text-gray-400">А также любая другая транспортная компания по вашему усмотрению</p>
+          </div>
+        </section>
+
+        {/* How to order */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 py-16">
           <div className="text-center mb-10">
             <p className="text-xs font-semibold tracking-widest uppercase mb-2" style={{color:'#3ECAB4'}}>Просто</p>
@@ -152,9 +284,9 @@ export default function HomePage() {
               { n:'01', title:'Выбираете аппарат', desc:'Изучите каталог. Поможем с выбором под ваши задачи.' },
               { n:'02', title:'Оставляете заявку', desc:'Нажмите "Купить в 1 клик". Форма займёт 10 секунд.' },
               { n:'03', title:'Менеджер звонит', desc:'Свяжемся в течение 30 минут, обсудим доставку.' },
-              { n:'04', title:'Получаете аппарат', desc:'Доставка по России + бесплатное обучение.' },
+              { n:'04', title:'Получаете аппарат', desc:'Доставка по России и СНГ + бесплатное обучение.' },
             ].map(({ n, title, desc }) => (
-              <div key={n} className="text-center p-6 rounded-2xl bg-gray-50 hover:bg-teal-50 transition-colors group">
+              <div key={n} className="text-center p-6 rounded-2xl bg-gray-50 hover:bg-teal-50 transition-colors">
                 <div className="w-12 h-12 rounded-full text-white font-bold text-lg flex items-center justify-center mx-auto mb-4" style={{background:'#3ECAB4'}}>{n}</div>
                 <h3 className="font-semibold text-gray-900 mb-2">{title}</h3>
                 <p className="text-sm text-gray-500 leading-relaxed">{desc}</p>
@@ -163,6 +295,7 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* CTA */}
         <section className="mx-4 sm:mx-6 lg:mx-auto max-w-5xl mb-16 rounded-3xl overflow-hidden" style={{background:'linear-gradient(135deg, #3ECAB4, #168d7d)'}}>
           <div className="px-8 py-12 text-center text-white">
             <h2 className="text-3xl font-bold mb-4">Нужна помощь с выбором?</h2>
