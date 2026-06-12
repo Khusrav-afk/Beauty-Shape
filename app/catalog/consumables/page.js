@@ -1,9 +1,9 @@
 'use client'
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import Link from 'next/link'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import { products, formatPrice } from '@/lib/catalog'
+import { fetchProductsByCategory, formatPrice } from '@/lib/catalog'
 
 // Все расходные материалы из каталога
 const CONSUMABLE_SLUGS = ['consumables']
@@ -21,11 +21,16 @@ const COMPATIBILITY_FILTERS = [
 export default function ConsumablesPage() {
   const [activeFilter, setActiveFilter] = useState('all')
   const [search, setSearch] = useState('')
+  const [consumables, setConsumables] = useState([])
+  const [loading, setLoading] = useState(true)
 
-  const consumables = useMemo(() =>
-    products.filter(p => p.categorySlug === 'consumables'),
-    []
-  )
+  useEffect(() => {
+    let alive = true
+    fetchProductsByCategory('consumables').then(list => {
+      if (alive) { setConsumables(list); setLoading(false) }
+    })
+    return () => { alive = false }
+  }, [])
 
   // Фильтрация по совместимости и поиску
   const filtered = useMemo(() => {
@@ -116,7 +121,12 @@ export default function ConsumablesPage() {
         </div>
 
         {/* Результат фильтрации */}
-        {filtered.length === 0 ? (
+        {loading ? (
+          <div className="flex flex-col items-center justify-center py-20 text-gray-400">
+            <div className="w-9 h-9 rounded-full border-4 border-gray-200 border-t-teal-400 animate-spin mb-3" />
+            <p className="text-sm">Загрузка…</p>
+          </div>
+        ) : filtered.length === 0 ? (
           <div className="text-center py-20">
             <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4 bg-gray-100">
               <svg className="w-7 h-7 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -138,19 +148,23 @@ export default function ConsumablesPage() {
               {filtered.map(product => (
                 <div key={product.id} className="bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-md hover:border-teal-100 transition-all duration-200 group">
                   <Link href={`/catalog/${product.categorySlug}/${product.slug}`}>
-                    <div className="h-40 flex items-center justify-center relative" style={{background:'linear-gradient(135deg, #f0fdfb, #e6faf7)'}}>
+                    <div className="h-40 flex items-center justify-center relative overflow-hidden" style={{background:'linear-gradient(135deg, #f0fdfb, #e6faf7)'}}>
                       {product.stock > 0
-                        ? <span className="absolute top-2.5 right-2.5 px-2 py-0.5 text-xs font-semibold rounded-full bg-green-50 text-green-700">В наличии</span>
-                        : <span className="absolute top-2.5 right-2.5 px-2 py-0.5 text-xs font-semibold rounded-full bg-gray-100 text-gray-500">Под заказ</span>
+                        ? <span className="absolute top-2.5 right-2.5 z-10 px-2 py-0.5 text-xs font-semibold rounded-full bg-green-50 text-green-700">В наличии</span>
+                        : <span className="absolute top-2.5 right-2.5 z-10 px-2 py-0.5 text-xs font-semibold rounded-full bg-gray-100 text-gray-500">Под заказ</span>
                       }
-                      <div className="text-center text-gray-300">
-                        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="mx-auto mb-1.5 opacity-30">
-                          <rect x="3" y="3" width="18" height="18" rx="2" strokeWidth="1.5"/>
-                          <circle cx="8.5" cy="8.5" r="1.5" strokeWidth="1.5"/>
-                          <polyline points="21 15 16 10 5 21" strokeWidth="1.5"/>
-                        </svg>
-                        <p className="text-xs">Фото</p>
-                      </div>
+                      {product.images && product.images.length > 0 ? (
+                        <img src={product.images[0]} alt={product.name} className="absolute inset-0 w-full h-full object-cover" />
+                      ) : (
+                        <div className="text-center text-gray-300">
+                          <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="mx-auto mb-1.5 opacity-30">
+                            <rect x="3" y="3" width="18" height="18" rx="2" strokeWidth="1.5"/>
+                            <circle cx="8.5" cy="8.5" r="1.5" strokeWidth="1.5"/>
+                            <polyline points="21 15 16 10 5 21" strokeWidth="1.5"/>
+                          </svg>
+                          <p className="text-xs">Фото</p>
+                        </div>
+                      )}
                     </div>
                   </Link>
                   <div className="p-4">
