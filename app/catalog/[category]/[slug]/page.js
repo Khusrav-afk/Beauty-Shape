@@ -1,15 +1,50 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import { products, getCategoryBySlug, formatPrice, needsPaidTraining, getRelatedConsumables, COUNTRY_FLAGS, COUNTRY_NAMES } from '@/lib/catalog'
+import { fetchProductBySlug, fetchCategoryBySlug, fetchRelatedConsumables, formatPrice, needsPaidTraining, COUNTRY_FLAGS, COUNTRY_FLAG_SRC, COUNTRY_NAMES } from '@/lib/catalog'
 
 export default function ProductPage({ params }) {
-  const product = products.find(p => p.slug === params.slug)
-  const category = product ? getCategoryBySlug(product.categorySlug) : null
+  const [product, setProduct] = useState(undefined) // undefined = загрузка, null = не найден
+  const [category, setCategory] = useState(null)
+  const [related, setRelated] = useState([])
+  const [activeImg, setActiveImg] = useState(0)
 
-  if (!product) return (
+  useEffect(() => {
+    let alive = true
+    ;(async () => {
+      const p = await fetchProductBySlug(params.slug)
+      if (!alive) return
+      setProduct(p || null)
+      setActiveImg(0)
+      if (p) {
+        const [cat, rel] = await Promise.all([
+          fetchCategoryBySlug(p.categorySlug),
+          fetchRelatedConsumables(p),
+        ])
+        if (!alive) return
+        setCategory(cat)
+        setRelated(rel)
+      }
+    })()
+    return () => { alive = false }
+  }, [params.slug])
+
+  // Загрузка
+  if (product === undefined) return (
+    <>
+      <Header />
+      <div className="max-w-7xl mx-auto px-6 py-32 flex flex-col items-center justify-center text-gray-400">
+        <div className="w-10 h-10 rounded-full border-4 border-gray-200 border-t-teal-400 animate-spin mb-4" />
+        <p className="text-sm">Загрузка товара…</p>
+      </div>
+      <Footer />
+    </>
+  )
+
+  // Не найден
+  if (product === null) return (
     <>
       <Header />
       <div className="max-w-7xl mx-auto px-6 py-20 text-center">
@@ -22,9 +57,10 @@ export default function ProductPage({ params }) {
   )
 
   const isPaidTraining = needsPaidTraining(product)
-  const flag = COUNTRY_FLAGS[product.country]
+  const flagSrc = COUNTRY_FLAG_SRC[product.country]
   const countryName = COUNTRY_NAMES[product.country]
-  const relatedConsumables = getRelatedConsumables(product)
+  const images = product.images || []
+  const mainImg = images[activeImg] || images[0]
 
   return (
     <>
@@ -48,31 +84,47 @@ export default function ProductPage({ params }) {
           <div>
             <div className="aspect-square rounded-3xl flex items-center justify-center relative overflow-hidden" style={{background:'linear-gradient(145deg, #f0fdfb, #e0f7f3)'}}>
               {product.isHit && (
-                <span className="absolute top-4 left-4 px-3 py-1 text-sm font-semibold text-white rounded-full" style={{background:'#3ECAB4'}}>
+                <span className="absolute top-4 left-4 z-10 px-3 py-1 text-sm font-semibold text-white rounded-full" style={{background:'#3ECAB4'}}>
                   Хит продаж
                 </span>
               )}
-              <span className={`absolute top-4 right-4 px-3 py-1 text-xs font-semibold rounded-full ${
+              <span className={`absolute top-4 right-4 z-10 px-3 py-1 text-xs font-semibold rounded-full ${
                 product.stock > 0 ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'
               }`}>
                 {product.stock > 0 ? 'В наличии' : 'Под заказ'}
               </span>
-              {flag && (
-                <div className="absolute bottom-4 right-4 flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/80 backdrop-blur-sm shadow-sm">
-                  <span className="text-base leading-none">{flag}</span>
+              {flagSrc && (
+                <div className="absolute bottom-4 right-4 z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/80 backdrop-blur-sm shadow-sm">
+                  <img src={flagSrc} alt={product.country} width={20} height={15} className="block w-5 h-auto rounded-sm" />
                   <span className="text-xs text-gray-600 font-medium">{countryName}</span>
                 </div>
               )}
-              <div className="text-center text-gray-300">
-                <svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="mx-auto mb-3 opacity-30">
-                  <rect x="3" y="3" width="18" height="18" rx="2" strokeWidth="1"/>
-                  <circle cx="8.5" cy="8.5" r="1.5" strokeWidth="1"/>
-                  <polyline points="21 15 16 10 5 21" strokeWidth="1"/>
-                </svg>
-                <p className="text-sm">Фото аппарата</p>
-                <p className="text-xs mt-1 opacity-60">Будет добавлено</p>
-              </div>
+              {mainImg ? (
+                <img src={mainImg} alt={product.name} className="absolute inset-0 w-full h-full object-cover" />
+              ) : (
+                <div className="text-center text-gray-300">
+                  <svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="mx-auto mb-3 opacity-30">
+                    <rect x="3" y="3" width="18" height="18" rx="2" strokeWidth="1"/>
+                    <circle cx="8.5" cy="8.5" r="1.5" strokeWidth="1"/>
+                    <polyline points="21 15 16 10 5 21" strokeWidth="1"/>
+                  </svg>
+                  <p className="text-sm">Фото аппарата</p>
+                </div>
+              )}
             </div>
+
+            {/* Миниатюры (если фото больше одного) */}
+            {images.length > 1 && (
+              <div className="flex gap-2 mt-3 flex-wrap">
+                {images.map((img, i) => (
+                  <button key={i} onClick={() => setActiveImg(i)}
+                    className={`w-16 h-16 rounded-xl overflow-hidden border-2 transition-colors ${i === activeImg ? 'border-teal-400' : 'border-transparent'}`}>
+                    <img src={img} alt="" className="w-full h-full object-cover" />
+                  </button>
+                ))}
+              </div>
+            )}
+
             <div className="flex flex-wrap gap-2 mt-4">
               <span className="px-3 py-1.5 rounded-lg text-xs font-medium bg-green-50 text-green-700">Гарантия 1 год</span>
               <span className="px-3 py-1.5 rounded-lg text-xs font-medium bg-blue-50 text-blue-700">Доставка по России и СНГ</span>
@@ -87,7 +139,7 @@ export default function ProductPage({ params }) {
             <p className="text-gray-600 leading-relaxed mb-6">{product.desc}</p>
 
             {/* Характеристики */}
-            {Object.keys(product.specs).length > 0 && (
+            {product.specs && Object.keys(product.specs).length > 0 && (
               <div className="mb-6 p-4 rounded-2xl bg-gray-50">
                 <h3 className="font-semibold text-sm text-gray-900 mb-3">Характеристики</h3>
                 <div className="space-y-2">
@@ -152,7 +204,7 @@ export default function ProductPage({ params }) {
         </div>
 
         {/* ===== Блок сопутствующих расходников ===== */}
-        {relatedConsumables.length > 0 && (
+        {related.length > 0 && (
           <div className="mt-16">
             <div className="flex items-center justify-between mb-5">
               <div>
@@ -168,23 +220,27 @@ export default function ProductPage({ params }) {
 
             {/* Горизонтальная карусель */}
             <div className="flex gap-4 overflow-x-auto pb-2 -mx-1 px-1 snap-x snap-mandatory scrollbar-hide">
-              {relatedConsumables.map(item => (
+              {related.map(item => (
                 <div key={item.id}
                   className="flex-shrink-0 w-56 bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-md hover:border-teal-100 transition-all duration-200 snap-start">
                   <Link href={`/catalog/${item.categorySlug}/${item.slug}`}>
-                    <div className="h-36 flex items-center justify-center relative" style={{background:'linear-gradient(135deg, #f0fdfb, #e6faf7)'}}>
+                    <div className="h-36 flex items-center justify-center relative overflow-hidden" style={{background:'linear-gradient(135deg, #f0fdfb, #e6faf7)'}}>
                       {item.stock > 0
-                        ? <span className="absolute top-2 right-2 px-2 py-0.5 text-xs font-semibold rounded-full bg-green-50 text-green-700">В наличии</span>
-                        : <span className="absolute top-2 right-2 px-2 py-0.5 text-xs font-semibold rounded-full bg-gray-100 text-gray-500">Под заказ</span>
+                        ? <span className="absolute top-2 right-2 z-10 px-2 py-0.5 text-xs font-semibold rounded-full bg-green-50 text-green-700">В наличии</span>
+                        : <span className="absolute top-2 right-2 z-10 px-2 py-0.5 text-xs font-semibold rounded-full bg-gray-100 text-gray-500">Под заказ</span>
                       }
-                      <div className="text-center text-gray-300">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="mx-auto mb-1.5 opacity-30">
-                          <rect x="3" y="3" width="18" height="18" rx="2" strokeWidth="1.5"/>
-                          <circle cx="8.5" cy="8.5" r="1.5" strokeWidth="1.5"/>
-                          <polyline points="21 15 16 10 5 21" strokeWidth="1.5"/>
-                        </svg>
-                        <p className="text-xs">Фото</p>
-                      </div>
+                      {item.images && item.images.length > 0 ? (
+                        <img src={item.images[0]} alt={item.name} className="absolute inset-0 w-full h-full object-cover" />
+                      ) : (
+                        <div className="text-center text-gray-300">
+                          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="mx-auto mb-1.5 opacity-30">
+                            <rect x="3" y="3" width="18" height="18" rx="2" strokeWidth="1.5"/>
+                            <circle cx="8.5" cy="8.5" r="1.5" strokeWidth="1.5"/>
+                            <polyline points="21 15 16 10 5 21" strokeWidth="1.5"/>
+                          </svg>
+                          <p className="text-xs">Фото</p>
+                        </div>
+                      )}
                     </div>
                   </Link>
                   <div className="p-3">
