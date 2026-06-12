@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import { categories, getHitProducts, formatPrice, COUNTRY_FLAGS } from '@/lib/catalog'
+import { fetchCategories, fetchHitProducts, formatPrice, COUNTRY_FLAGS } from '@/lib/catalog'
 
 export const dynamic = 'force-dynamic'
 
@@ -12,8 +12,8 @@ const CAT_COLORS = [
   '#2DD4BF', '#818CF8',
 ]
 
-export default function HomePage() {
-  const hits = getHitProducts()
+export default async function HomePage() {
+  const [categories, hits] = await Promise.all([fetchCategories(), fetchHitProducts()])
 
   return (
     <>
@@ -156,11 +156,11 @@ export default function HomePage() {
               {hits.map(product => (
                 <div key={product.id} className="bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 group">
                   <Link href={`/catalog/${product.categorySlug}/${product.slug}`}>
-                    <div className="h-52 flex items-center justify-center relative" style={{background:'linear-gradient(135deg, #f0fdfb, #e6faf7)'}}>
+                    <div className="h-52 flex items-center justify-center relative overflow-hidden" style={{background:'linear-gradient(135deg, #f0fdfb, #e6faf7)'}}>
 
                       {/* Хит */}
                       {product.isHit && (
-                        <span className="absolute top-3 left-3 px-2.5 py-1 text-xs font-bold text-white rounded-full flex items-center gap-1" style={{background:'#3ECAB4'}}>
+                        <span className="absolute top-3 left-3 z-10 px-2.5 py-1 text-xs font-bold text-white rounded-full flex items-center gap-1" style={{background:'#3ECAB4'}}>
                           <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
                           </svg>
@@ -170,12 +170,12 @@ export default function HomePage() {
 
                       {/* Статус — графическая плашка с точкой */}
                       {product.stock > 0 ? (
-                        <span className="absolute top-3 right-3 flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded-full bg-green-50 text-green-700 border border-green-100">
+                        <span className="absolute top-3 right-3 z-10 flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded-full bg-green-50 text-green-700 border border-green-100">
                           <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"/>
                           В наличии
                         </span>
                       ) : (
-                        <span className="absolute top-3 right-3 flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded-full bg-gray-50 text-gray-500 border border-gray-200">
+                        <span className="absolute top-3 right-3 z-10 flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded-full bg-gray-50 text-gray-500 border border-gray-200">
                           <span className="w-1.5 h-1.5 rounded-full bg-gray-400"/>
                           Под заказ
                         </span>
@@ -183,19 +183,24 @@ export default function HomePage() {
 
                       {/* Флаг страны */}
                       {product.country && COUNTRY_FLAGS[product.country] && (
-                        <div className="absolute bottom-3 right-3 w-7 h-7 rounded-lg bg-white/90 backdrop-blur-sm shadow-sm flex items-center justify-center text-base">
+                        <div className="absolute bottom-3 right-3 z-10 w-7 h-7 rounded-lg bg-white/90 backdrop-blur-sm shadow-sm flex items-center justify-center text-base">
                           {COUNTRY_FLAGS[product.country]}
                         </div>
                       )}
 
-                      <div className="text-center text-gray-300">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="mx-auto mb-2 opacity-30">
-                          <rect x="3" y="3" width="18" height="18" rx="2" strokeWidth="1.5"/>
-                          <circle cx="8.5" cy="8.5" r="1.5" strokeWidth="1.5"/>
-                          <polyline points="21 15 16 10 5 21" strokeWidth="1.5"/>
-                        </svg>
-                        <p className="text-xs">Фото аппарата</p>
-                      </div>
+                      {/* Фото или заглушка */}
+                      {product.images && product.images.length > 0 ? (
+                        <img src={product.images[0]} alt={product.name} className="absolute inset-0 w-full h-full object-cover" />
+                      ) : (
+                        <div className="text-center text-gray-300">
+                          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="mx-auto mb-2 opacity-30">
+                            <rect x="3" y="3" width="18" height="18" rx="2" strokeWidth="1.5"/>
+                            <circle cx="8.5" cy="8.5" r="1.5" strokeWidth="1.5"/>
+                            <polyline points="21 15 16 10 5 21" strokeWidth="1.5"/>
+                          </svg>
+                          <p className="text-xs">Фото аппарата</p>
+                        </div>
+                      )}
                     </div>
                   </Link>
                   <div className="p-4">
