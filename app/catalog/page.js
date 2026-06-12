@@ -1,11 +1,14 @@
 import Link from 'next/link'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import { categories, products, formatPrice } from '@/lib/catalog'
+import { fetchCategories, fetchProducts, formatPrice } from '@/lib/catalog'
 
 export const metadata = { title: 'Каталог — Beauty Shape' }
+export const revalidate = 60
 
-export default function CatalogPage() {
+export default async function CatalogPage() {
+  const [categories, products] = await Promise.all([fetchCategories(), fetchProducts()])
+
   return (
     <>
       <Header />
@@ -19,7 +22,7 @@ export default function CatalogPage() {
         </nav>
 
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Каталог оборудования</h1>
-        <p className="text-gray-500 mb-10">64 аппарата в 14 категориях — профессиональное косметологическое оборудование</p>
+        <p className="text-gray-500 mb-10">100+ моделей в {categories.length} категориях — профессиональное косметологическое оборудование</p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {categories.map(cat => {
@@ -33,9 +36,6 @@ export default function CatalogPage() {
                     <h2 className="font-semibold text-gray-900 group-hover:text-teal-700 transition-colors">{cat.name}</h2>
                     <span className="text-xs text-gray-400">{cat.count} товаров</span>
                   </div>
-                  <span className="text-2xl">
-                    {['⚡','💎','✨','🔴','🔵','🌊','🪡','❄️','💧','⚙️','🤸','💪','🔮','🪑'][categories.indexOf(cat)]}
-                  </span>
                 </div>
                 {hits.length > 0 && (
                   <div className="space-y-2">
