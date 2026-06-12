@@ -228,20 +228,39 @@ function ProductModal({ product, categories, products = [], saving, onSave, onCl
     const files = Array.from(e.target.files)
     if (!files.length) return
     setUploading(true)
+
+    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
+    const preset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
+    if (!cloudName || !preset) {
+      alert('Не заданы NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME / NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET в Vercel')
+      setUploading(false)
+      return
+    }
+
     const urls = []
     for (const file of files) {
       const fd = new FormData()
       fd.append('file', file)
+      fd.append('upload_preset', preset)
       try {
-        const res = await fetch('/api/upload', { method: 'POST', body: fd })
+        // Загрузка напрямую браузер → Cloudinary, минуя лимит Vercel (4.5 МБ)
+        const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+          method: 'POST',
+          body: fd,
+        })
         const data = await res.json()
-        if (data.url) urls.push(data.url)
+        if (res.ok && data.secure_url) {
+          urls.push(data.secure_url)
+        } else {
+          alert('Ошибка загрузки фото: ' + (data?.error?.message || `HTTP ${res.status}`))
+        }
       } catch (err) {
-        console.error('Upload error:', err)
+        alert('Ошибка загрузки фото: ' + (err?.message || 'сеть недоступна'))
       }
     }
-    f('images', [...(form.images || []), ...urls])
+    if (urls.length) f('images', [...(form.images || []), ...urls])
     setUploading(false)
+    e.target.value = ''
   }
 
   function removeImage(idx) {
