@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import { fetchCategories, fetchHitProducts, formatPrice, COUNTRY_FLAGS } from '@/lib/catalog'
+import { fetchCategories, fetchHitProducts, formatPrice, COUNTRY_FLAGS, COUNTRY_FLAG_SRC } from '@/lib/catalog'
 
 export const dynamic = 'force-dynamic'
 
@@ -183,8 +183,8 @@ export default async function HomePage() {
 
                       {/* Флаг страны */}
                       {product.country && COUNTRY_FLAGS[product.country] && (
-                        <div className="absolute bottom-3 right-3 z-10 w-7 h-7 rounded-lg bg-white/90 backdrop-blur-sm shadow-sm flex items-center justify-center text-base">
-                          {COUNTRY_FLAGS[product.country]}
+                        <div className="absolute bottom-3 right-3 z-10 rounded-md overflow-hidden bg-white/90 backdrop-blur-sm shadow-sm">
+                          <img src={COUNTRY_FLAG_SRC[product.country]} alt={product.country} width={24} height={18} className="block w-6 h-auto" />
                         </div>
                       )}
 
