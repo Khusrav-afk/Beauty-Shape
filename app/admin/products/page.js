@@ -1,6 +1,5 @@
 'use client'
 import { useState, useEffect, useRef } from 'react'
-import { supabase } from '@/lib/supabase'
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState([])
@@ -13,12 +12,15 @@ export default function AdminProductsPage() {
 
   async function load() {
     setLoading(true)
-    const [{ data: prods }, { data: cats }] = await Promise.all([
-      supabase.from('products').select('*, categories(name,slug)').order('category_id').order('sort_order'),
-      supabase.from('categories').select('*').order('sort_order'),
-    ])
-    setProducts(prods || [])
-    setCategories(cats || [])
+    try {
+      const res = await fetch('/api/admin/products')
+      const data = await res.json()
+      setProducts(data.products || [])
+      setCategories(data.categories || [])
+    } catch {
+      setProducts([])
+      setCategories([])
+    }
     setLoading(false)
   }
 
@@ -48,14 +50,16 @@ export default function AdminProductsPage() {
       sort_order:       parseInt(form.sort_order) || 0,
       specs:            parseSpecs(form.specs_text || ''),
       images:           form.images || [],
+      country:          form.country || null,
+      related_consumables: form.related_consumables || [],
       updated_at:       new Date().toISOString(),
     }
 
-    if (form.id) {
-      await supabase.from('products').update(payload).eq('id', form.id)
-    } else {
-      await supabase.from('products').insert(payload)
-    }
+    await fetch('/api/admin/products', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(form.id ? { id: form.id, ...payload } : payload),
+    })
     setSaving(false)
     setEditing(null)
     load()
@@ -63,12 +67,20 @@ export default function AdminProductsPage() {
 
   async function deleteProduct(id) {
     if (!confirm('Удалить товар?')) return
-    await supabase.from('products').delete().eq('id', id)
+    await fetch('/api/admin/products', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id }),
+    })
     setProducts(products.filter(p => p.id !== id))
   }
 
   async function toggleActive(p) {
-    await supabase.from('products').update({ is_active: !p.is_active }).eq('id', p.id)
+    await fetch('/api/admin/products', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: p.id, is_active: !p.is_active }),
+    })
     setProducts(products.map(x => x.id === p.id ? { ...x, is_active: !p.is_active } : x))
   }
 
@@ -191,6 +203,7 @@ export default function AdminProductsPage() {
         <ProductModal
           product={editing}
           categories={categories}
+          products={products}
           saving={saving}
           onSave={saveProduct}
           onClose={() => setEditing(null)}
@@ -200,11 +213,16 @@ export default function AdminProductsPage() {
   )
 }
 
-function ProductModal({ product, categories, saving, onSave, onClose }) {
+function ProductModal({ product, categories, products = [], saving, onSave, onClose }) {
   const [form, setForm] = useState(product)
   const [uploading, setUploading] = useState(false)
   const fileRef = useRef()
   const f = (key, val) => setForm(p => ({...p, [key]: val}))
+
+  // Товары из категории «Расходные материалы» — для блока сопутствующих
+  const consumableProducts = products.filter(
+    p => (p.categories?.slug === 'consumables') && p.slug !== form.slug
+  )
 
   async function handleImageUpload(e) {
     const files = Array.from(e.target.files)
@@ -281,6 +299,17 @@ function ProductModal({ product, categories, saving, onSave, onClose }) {
             </div>
 
             <div>
+              <label className="block text-xs font-medium text-gray-600 mb-1">Страна-производитель</label>
+              <select value={form.country||''} onChange={e => f('country', e.target.value)}
+                className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-teal-400">
+                <option value="">— не указана</option>
+                <option value="CN">🇨🇳 Китай</option>
+                <option value="KR">🇰🇷 Южная Корея</option>
+                <option value="US">🇺🇸 США</option>
+              </select>
+            </div>
+
+            <div>
               <label className="block text-xs font-medium text-gray-600 mb-1">Остаток на складе</label>
               <input type="number" min="0" value={form.stock||0} onChange={e => f('stock', e.target.value)}
                 className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-teal-400"/>
@@ -322,6 +351,31 @@ function ProductModal({ product, categories, saving, onSave, onClose }) {
               <textarea value={form.specs_text||''} onChange={e => f('specs_text', e.target.value)} rows={5}
                 placeholder={"Мощность: 1200 Вт\nВес: 10 кг\nГарантия: 1 год\nДлина волны: 808 нм"}
                 className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-teal-400 resize-none font-mono"/>
+            </div>
+
+            <div className="col-span-2">
+              <label className="block text-xs font-medium text-gray-600 mb-1">
+                Сопутствующие расходники (показываются каруселью в карточке товара)
+              </label>
+              {consumableProducts.length === 0 ? (
+                <p className="text-xs text-gray-400">Сначала добавьте товары в категорию «Расходные материалы»</p>
+              ) : (
+                <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto p-2 rounded-xl border border-gray-100 bg-gray-50">
+                  {consumableProducts.map(c => {
+                    const sel = (form.related_consumables || []).includes(c.slug)
+                    return (
+                      <button type="button" key={c.id}
+                        onClick={() => f('related_consumables', sel
+                          ? (form.related_consumables || []).filter(s => s !== c.slug)
+                          : [...(form.related_consumables || []), c.slug])}
+                        className={`px-2.5 py-1 rounded-lg text-xs font-medium border transition-colors ${sel ? 'text-white border-transparent' : 'bg-white text-gray-600 border-gray-200 hover:border-teal-300'}`}
+                        style={sel ? {background:'#3ECAB4'} : {}}>
+                        {c.name}
+                      </button>
+                    )
+                  })}
+                </div>
+              )}
             </div>
 
             <div className="col-span-2 flex flex-wrap gap-4 pt-1">
