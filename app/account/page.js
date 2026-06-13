@@ -20,11 +20,31 @@ export default function AccountPage() {
   const { user, loading, signOut } = useAuth()
   const [orders, setOrders] = useState([])
   const [loadingOrders, setLoadingOrders] = useState(true)
+  const [profile, setProfile] = useState({ full_name: '', phone: '' })
+  const [savingProfile, setSavingProfile] = useState(false)
+  const [profileSaved, setProfileSaved] = useState(false)
 
   // Не вошёл — на страницу входа
   useEffect(() => {
     if (!loading && !user) router.replace('/login')
   }, [user, loading, router])
+
+  // Подставляем сохранённые ФИО/телефон
+  useEffect(() => {
+    if (user) setProfile({
+      full_name: user.user_metadata?.full_name || '',
+      phone:     user.user_metadata?.phone || '',
+    })
+  }, [user])
+
+  async function saveProfile(e) {
+    e.preventDefault()
+    if (!supabase) return
+    setSavingProfile(true); setProfileSaved(false)
+    await supabase.auth.updateUser({ data: { full_name: profile.full_name, phone: profile.phone } })
+    setSavingProfile(false); setProfileSaved(true)
+    setTimeout(() => setProfileSaved(false), 2000)
+  }
 
   // Загружаем свои заявки (RLS вернёт только принадлежащие пользователю)
   useEffect(() => {
@@ -57,6 +77,33 @@ export default function AccountPage() {
             className="px-4 py-2 rounded-xl text-sm font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 transition-colors flex-shrink-0">
             Выйти
           </button>
+        </div>
+
+        {/* Профиль */}
+        <div className="bg-white rounded-2xl border border-gray-100 p-5 mb-8">
+          <h2 className="text-lg font-bold text-gray-900 mb-4">Мои данные</h2>
+          <form onSubmit={saveProfile} className="space-y-3">
+            <div>
+              <label className="block text-xs font-medium text-gray-500 mb-1">ФИО</label>
+              <input value={profile.full_name} onChange={e => setProfile({ ...profile, full_name: e.target.value })}
+                placeholder="Иванова Анна Сергеевна"
+                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-teal-400" />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-500 mb-1">Телефон</label>
+              <input type="tel" value={profile.phone} onChange={e => setProfile({ ...profile, phone: e.target.value })}
+                placeholder="+7 ..."
+                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-teal-400" />
+            </div>
+            <div className="flex items-center gap-3">
+              <button type="submit" disabled={savingProfile}
+                className="px-5 py-2.5 rounded-xl text-white text-sm font-semibold hover:opacity-90 disabled:opacity-60 transition-all"
+                style={{ background:'#3ECAB4' }}>
+                {savingProfile ? 'Сохранение…' : 'Сохранить'}
+              </button>
+              {profileSaved && <span className="text-sm text-green-600">✓ Сохранено</span>}
+            </div>
+          </form>
         </div>
 
         <h2 className="text-lg font-bold text-gray-900 mb-4">Мои заявки</h2>
