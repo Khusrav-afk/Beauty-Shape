@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import Link from 'next/link'
+import { useAuth } from './AuthContext'
 
 export default function BuyButton({ productName }) {
   const [open, setOpen] = useState(false)
@@ -39,6 +40,7 @@ export default function BuyButton({ productName }) {
 }
 
 function BuyForm({ productName, onClose }) {
+  const { user } = useAuth()
   const [sent, setSent] = useState(false)
   const [loading, setLoading] = useState(false)
   const [form, setForm] = useState({ name:'', phone:'', comment:`Интересует: ${productName}` })
@@ -50,7 +52,7 @@ function BuyForm({ productName, onClose }) {
       await fetch('/api/orders', {
         method:'POST',
         headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({...form, productName}),
+        body: JSON.stringify({...form, productName, userId: user?.id || null}),
       })
     } catch {}
     setLoading(false)
