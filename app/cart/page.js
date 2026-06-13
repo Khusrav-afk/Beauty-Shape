@@ -4,10 +4,12 @@ import Link from 'next/link'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { useCart } from '@/components/CartContext'
+import { useAuth } from '@/components/AuthContext'
 import { formatPrice } from '@/lib/catalog'
 
 export default function CartPage() {
   const { items, setQty, removeItem, clear, count, total, loaded } = useCart()
+  const { user } = useAuth()
   const [form, setForm] = useState({ name:'', phone:'', comment:'' })
   const [loading, setLoading] = useState(false)
   const [sent, setSent] = useState(false)
@@ -30,6 +32,7 @@ export default function CartPage() {
           phone: form.phone,
           comment,
           productName: `Корзина (${count} поз.)`,
+          userId: user?.id || null,
         }),
       })
     } catch {}
