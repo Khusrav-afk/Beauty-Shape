@@ -1,50 +1,16 @@
-'use client'
-import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import { fetchProductBySlug, fetchCategoryBySlug, fetchRelatedConsumables, formatPrice, needsPaidTraining, COUNTRY_FLAGS, COUNTRY_FLAG_SRC, COUNTRY_NAMES } from '@/lib/catalog'
+import BuyButton from '@/components/BuyButton'
+import ProductGallery from '@/components/ProductGallery'
+import { fetchProductBySlug, fetchCategoryBySlug, fetchRelatedConsumables, formatPrice, needsPaidTraining, COUNTRY_FLAG_SRC, COUNTRY_NAMES } from '@/lib/catalog'
 
-export default function ProductPage({ params }) {
-  const [product, setProduct] = useState(undefined) // undefined = загрузка, null = не найден
-  const [category, setCategory] = useState(null)
-  const [related, setRelated] = useState([])
-  const [activeImg, setActiveImg] = useState(0)
+export const dynamic = 'force-dynamic'
 
-  useEffect(() => {
-    let alive = true
-    ;(async () => {
-      const p = await fetchProductBySlug(params.slug)
-      if (!alive) return
-      setProduct(p || null)
-      setActiveImg(0)
-      if (p) {
-        const [cat, rel] = await Promise.all([
-          fetchCategoryBySlug(p.categorySlug),
-          fetchRelatedConsumables(p),
-        ])
-        if (!alive) return
-        setCategory(cat)
-        setRelated(rel)
-      }
-    })()
-    return () => { alive = false }
-  }, [params.slug])
+export default async function ProductPage({ params }) {
+  const product = await fetchProductBySlug(params.slug)
 
-  // Загрузка
-  if (product === undefined) return (
-    <>
-      <Header />
-      <div className="max-w-7xl mx-auto px-6 py-32 flex flex-col items-center justify-center text-gray-400">
-        <div className="w-10 h-10 rounded-full border-4 border-gray-200 border-t-teal-400 animate-spin mb-4" />
-        <p className="text-sm">Загрузка товара…</p>
-      </div>
-      <Footer />
-    </>
-  )
-
-  // Не найден
-  if (product === null) return (
+  if (!product) return (
     <>
       <Header />
       <div className="max-w-7xl mx-auto px-6 py-20 text-center">
@@ -56,11 +22,14 @@ export default function ProductPage({ params }) {
     </>
   )
 
+  const [category, related] = await Promise.all([
+    fetchCategoryBySlug(product.categorySlug),
+    fetchRelatedConsumables(product),
+  ])
+
   const isPaidTraining = needsPaidTraining(product)
   const flagSrc = COUNTRY_FLAG_SRC[product.country]
   const countryName = COUNTRY_NAMES[product.country]
-  const images = product.images || []
-  const mainImg = images[activeImg] || images[0]
 
   return (
     <>
@@ -80,56 +49,16 @@ export default function ProductPage({ params }) {
 
         <div className="grid md:grid-cols-2 gap-10 lg:gap-16">
 
-          {/* Фото */}
-          <div>
-            <div className="aspect-square rounded-3xl flex items-center justify-center relative overflow-hidden" style={{background:'linear-gradient(145deg, #f0fdfb, #e0f7f3)'}}>
-              {product.isHit && (
-                <span className="absolute top-4 left-4 z-10 px-3 py-1 text-sm font-semibold text-white rounded-full" style={{background:'#3ECAB4'}}>
-                  Хит продаж
-                </span>
-              )}
-              <span className={`absolute top-4 right-4 z-10 px-3 py-1 text-xs font-semibold rounded-full ${
-                product.stock > 0 ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'
-              }`}>
-                {product.stock > 0 ? 'В наличии' : 'Под заказ'}
-              </span>
-              {flagSrc && (
-                <div className="absolute bottom-4 right-4 z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/80 backdrop-blur-sm shadow-sm">
-                  <img src={flagSrc} alt={product.country} width={20} height={15} className="block w-5 h-auto rounded-sm" />
-                  <span className="text-xs text-gray-600 font-medium">{countryName}</span>
-                </div>
-              )}
-              {mainImg ? (
-                <img src={mainImg} alt={product.name} className="absolute inset-0 w-full h-full object-cover" />
-              ) : (
-                <div className="text-center text-gray-300">
-                  <svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="mx-auto mb-3 opacity-30">
-                    <rect x="3" y="3" width="18" height="18" rx="2" strokeWidth="1"/>
-                    <circle cx="8.5" cy="8.5" r="1.5" strokeWidth="1"/>
-                    <polyline points="21 15 16 10 5 21" strokeWidth="1"/>
-                  </svg>
-                  <p className="text-sm">Фото аппарата</p>
-                </div>
-              )}
-            </div>
-
-            {/* Миниатюры (если фото больше одного) */}
-            {images.length > 1 && (
-              <div className="flex gap-2 mt-3 flex-wrap">
-                {images.map((img, i) => (
-                  <button key={i} onClick={() => setActiveImg(i)}
-                    className={`w-16 h-16 rounded-xl overflow-hidden border-2 transition-colors ${i === activeImg ? 'border-teal-400' : 'border-transparent'}`}>
-                    <img src={img} alt="" className="w-full h-full object-cover" />
-                  </button>
-                ))}
-              </div>
-            )}
-
-            <div className="flex flex-wrap gap-2 mt-4">
-              <span className="px-3 py-1.5 rounded-lg text-xs font-medium bg-green-50 text-green-700">Гарантия 1 год</span>
-              <span className="px-3 py-1.5 rounded-lg text-xs font-medium bg-blue-50 text-blue-700">Доставка по России и СНГ</span>
-            </div>
-          </div>
+          {/* Фото (клиентская галерея) */}
+          <ProductGallery
+            images={product.images || []}
+            name={product.name}
+            isHit={product.isHit}
+            stock={product.stock}
+            flagSrc={flagSrc}
+            country={product.country}
+            countryName={countryName}
+          />
 
           {/* Инфо */}
           <div>
@@ -260,7 +189,6 @@ export default function ProductPage({ params }) {
                 </div>
               ))}
 
-              {/* Плитка «Смотреть все» */}
               <div className="flex-shrink-0 w-44 rounded-2xl border border-dashed border-teal-200 flex items-center justify-center snap-start">
                 <Link href="/catalog/consumables" className="text-center p-4">
                   <div className="w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-2" style={{background:'#f0fdfb'}}>
@@ -278,102 +206,5 @@ export default function ProductPage({ params }) {
       </main>
       <Footer />
     </>
-  )
-}
-
-function BuyButton({ productName }) {
-  const [open, setOpen] = useState(false)
-
-  return (
-    <>
-      <button
-        onClick={() => setOpen(true)}
-        className="w-full py-4 rounded-2xl text-white font-semibold text-base transition-all hover:opacity-90 hover:shadow-lg hover:-translate-y-0.5"
-        style={{background:'#3ECAB4'}}>
-        Купить в 1 клик
-      </button>
-
-      {open && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4"
-          style={{background:'rgba(0,0,0,0.55)'}}
-          onClick={e => e.target === e.currentTarget && setOpen(false)}>
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
-            <div className="flex items-center justify-between mb-5">
-              <h3 className="text-lg font-bold text-gray-900">Оставить заявку</h3>
-              <button
-                onClick={() => setOpen(false)}
-                className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-gray-400 hover:bg-gray-200 transition-colors">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12"/>
-                </svg>
-              </button>
-            </div>
-            <BuyForm productName={productName} onClose={() => setOpen(false)} />
-          </div>
-        </div>
-      )}
-    </>
-  )
-}
-
-function BuyForm({ productName, onClose }) {
-  const [sent, setSent] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [form, setForm] = useState({ name:'', phone:'', comment:`Интересует: ${productName}` })
-
-  async function handleSubmit(e) {
-    e.preventDefault()
-    setLoading(true)
-    try {
-      await fetch('/api/orders', {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({...form, productName}),
-      })
-    } catch {}
-    setLoading(false)
-    setSent(true)
-  }
-
-  if (sent) return (
-    <div className="text-center py-6">
-      <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4" style={{background:'#f0fdfb'}}>
-        <svg className="w-7 h-7" style={{color:'#3ECAB4'}} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7"/>
-        </svg>
-      </div>
-      <p className="font-semibold text-gray-900 mb-1">Заявка отправлена!</p>
-      <p className="text-sm text-gray-500 mb-4">Менеджер свяжется в течение 30 минут</p>
-      <button onClick={onClose} className="text-sm font-medium hover:underline" style={{color:'#3ECAB4'}}>Закрыть</button>
-    </div>
-  )
-
-  return (
-    <form onSubmit={handleSubmit} className="space-y-3">
-      <input required value={form.name} onChange={e => setForm({...form, name:e.target.value})}
-        placeholder="Ваше имя *"
-        className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-100 transition-all"/>
-      <input required value={form.phone} onChange={e => setForm({...form, phone:e.target.value})}
-        placeholder="Телефон *" type="tel"
-        className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-100 transition-all"/>
-      <textarea value={form.comment} onChange={e => setForm({...form, comment:e.target.value})}
-        rows={3} className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-100 transition-all resize-none"/>
-      <label className="flex items-start gap-2 text-xs text-gray-500 cursor-pointer">
-        <input type="checkbox" required className="mt-0.5 accent-teal-500"/>
-        <span>Соглашаюсь с политикой обработки данных</span>
-      </label>
-      <div className="flex gap-2">
-        <button type="submit" disabled={loading}
-          className="flex-1 py-3 rounded-xl text-white text-sm font-semibold hover:opacity-90 disabled:opacity-60 transition-all"
-          style={{background:'#3ECAB4'}}>
-          {loading ? 'Отправка...' : 'Отправить'}
-        </button>
-        <button type="button" onClick={onClose}
-          className="px-4 py-3 rounded-xl border border-gray-200 text-sm text-gray-500 hover:bg-gray-50">
-          Отмена
-        </button>
-      </div>
-    </form>
   )
 }
