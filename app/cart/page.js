@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
@@ -14,6 +14,15 @@ export default function CartPage() {
   const [loading, setLoading] = useState(false)
   const [sent, setSent] = useState(false)
   const [agree, setAgree] = useState(false)
+
+  // Подставляем ФИО/телефон вошедшего пользователя
+  useEffect(() => {
+    if (user) setForm(f => ({
+      ...f,
+      name:  f.name  || user.user_metadata?.full_name || '',
+      phone: f.phone || user.user_metadata?.phone || '',
+    }))
+  }, [user])
 
   async function submitOrder(e) {
     e.preventDefault()
