@@ -1,6 +1,5 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { supabase } from '@/lib/supabase'
 
 const STATUS_LABELS = { new: 'Новая', in_progress: 'В работе', done: 'Завершена', cancelled: 'Отменена' }
 const STATUS_COLORS = { new: '#fef3c7|#92400e', in_progress: '#dbeafe|#1e40af', done: '#dcfce7|#166534', cancelled: '#fee2e2|#991b1b' }
@@ -12,18 +11,24 @@ export default function AdminOrdersPage() {
 
   async function load() {
     setLoading(true)
-    const { data } = await supabase
-      .from('orders')
-      .select('*')
-      .order('created_at', { ascending: false })
-    setOrders(data || [])
+    try {
+      const res = await fetch('/api/admin/orders')
+      const data = await res.json()
+      setOrders(data.orders || [])
+    } catch {
+      setOrders([])
+    }
     setLoading(false)
   }
 
   useEffect(() => { load() }, [])
 
   async function updateStatus(id, status) {
-    await supabase.from('orders').update({ status }).eq('id', id)
+    await fetch('/api/admin/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, status }),
+    })
     setOrders(orders.map(o => o.id === id ? { ...o, status } : o))
   }
 
