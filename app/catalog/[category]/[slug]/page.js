@@ -2,6 +2,7 @@ import Link from 'next/link'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import BuyButton from '@/components/BuyButton'
+import AddToCartButton from '@/components/AddToCartButton'
 import ProductGallery from '@/components/ProductGallery'
 import { fetchProductBySlug, fetchCategoryBySlug, fetchRelatedConsumables, formatPrice, needsPaidTraining, COUNTRY_FLAG_SRC, COUNTRY_NAMES } from '@/lib/catalog'
 
@@ -119,9 +120,14 @@ export default async function ProductPage({ params }) {
               </div>
             )}
 
-            {/* Кнопка */}
+            {/* Кнопки */}
             {product.stock > 0
-              ? <BuyButton productName={product.name} />
+              ? (
+                <div className="space-y-3">
+                  <AddToCartButton product={product} />
+                  <BuyButton productName={product.name} />
+                </div>
+              )
               : (
                 <div className="p-4 rounded-2xl bg-gray-50 border border-gray-100 text-sm text-gray-600">
                   Аппарат доступен под заказ. Оставьте заявку — уточним сроки и стоимость.
