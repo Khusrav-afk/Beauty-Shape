@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import AddToCartButton from '@/components/AddToCartButton'
 import { fetchProductsByCategory, fetchCategoryBySlug, formatPrice, COUNTRY_FLAGS, COUNTRY_FLAG_SRC } from '@/lib/catalog'
 import { notFound } from 'next/navigation'
 
@@ -96,11 +97,14 @@ export default async function CategoryPage({ params }) {
                   </h3>
                   <p className="text-sm text-gray-500 mb-3 line-clamp-2">{product.desc}</p>
                   <p className="text-xl font-bold text-gray-900 mb-3">{formatPrice(product.price, product.priceFrom)}</p>
-                  <Link href={`/catalog/${product.categorySlug}/${product.slug}`}
-                    className="block w-full py-2.5 rounded-xl text-center text-sm font-semibold text-white transition-all hover:opacity-90"
-                    style={{background:'#3ECAB4'}}>
-                    Подробнее
-                  </Link>
+                  <div className="space-y-2">
+                    <Link href={`/catalog/${product.categorySlug}/${product.slug}`}
+                      className="block w-full py-2.5 rounded-xl text-center text-sm font-semibold text-white transition-all hover:opacity-90"
+                      style={{background:'#3ECAB4'}}>
+                      Подробнее
+                    </Link>
+                    {product.stock > 0 && <AddToCartButton product={product} />}
+                  </div>
                 </div>
               </div>
             ))}
