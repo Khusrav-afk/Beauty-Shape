@@ -1,5 +1,6 @@
 import './globals.css'
 import BottomNav from '@/components/BottomNav'
+import { CartProvider } from '@/components/CartContext'
 
 export const dynamic = 'force-dynamic'
 
@@ -12,8 +13,10 @@ export default function RootLayout({ children }) {
   return (
     <html lang="ru">
       <body>
-        {children}
-        <BottomNav />
+        <CartProvider>
+          {children}
+          <BottomNav />
+        </CartProvider>
       </body>
     </html>
   )
