@@ -4,7 +4,7 @@ import { createAdminClient } from '@/lib/supabase'
 export async function POST(request) {
   try {
     const data = await request.json()
-    const { name, phone, comment, productId, productName } = data
+    const { name, phone, comment, productId, productName, userId } = data
 
     if (!name?.trim() || !phone?.trim()) {
       return NextResponse.json({ error: 'Имя и телефон обязательны' }, { status: 400 })
@@ -17,6 +17,7 @@ export async function POST(request) {
       comment:      comment?.trim() || null,
       product_id:   productId || null,
       product_name: productName || null,
+      user_id:      userId || null,
       status:       'new',
     })
     if (dbError) console.error('Supabase insert error:', dbError)
