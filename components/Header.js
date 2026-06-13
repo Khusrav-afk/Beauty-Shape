@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import Link from 'next/link'
+import CartIcon from './CartIcon'
 
 const PHONE = '+79002747119'
 const PHONE_DISPLAY = '+7 900 274-71-19'
@@ -58,6 +59,7 @@ export default function Header() {
                 </span>
                 <span className="hidden lg:block">{PHONE_DISPLAY}</span>
               </a>
+              <CartIcon />
               <button onClick={() => setModalOpen(true)}
                 className="px-4 py-2 rounded-lg text-sm font-semibold text-white transition-all duration-200 hover:opacity-90 hover:shadow-md hover:-translate-y-0.5 active:scale-95"
                 style={{background:'#3ECAB4'}}>
