@@ -19,6 +19,17 @@ export default function LoginPage() {
   // Уже вошёл — отправляем в кабинет
   useEffect(() => { if (user) router.replace('/account') }, [user, router])
 
+  async function handleForgot() {
+    setError(''); setInfo('')
+    if (!form.email.trim()) { setError('Введите email, на который придёт ссылка'); return }
+    if (!supabase) { setError('Авторизация не настроена'); return }
+    const { error } = await supabase.auth.resetPasswordForEmail(form.email.trim(), {
+      redirectTo: `${window.location.origin}/reset-password`,
+    })
+    if (error) { setError(translate(error.message)); return }
+    setInfo('Письмо со ссылкой для смены пароля отправлено на ' + form.email.trim())
+  }
+
   async function handleSubmit(e) {
     e.preventDefault()
     setError(''); setInfo(''); setLoading(true)
@@ -70,6 +81,13 @@ export default function LoginPage() {
 
           {error && <p className="text-sm text-red-600">{error}</p>}
           {info && <p className="text-sm text-green-600">{info}</p>}
+
+          {mode === 'login' && (
+            <button type="button" onClick={handleForgot}
+              className="block text-xs text-gray-400 hover:text-teal-600 hover:underline">
+              Забыли пароль?
+            </button>
+          )}
 
           <button type="submit" disabled={loading}
             className="w-full py-3 rounded-xl text-white text-sm font-semibold hover:opacity-90 disabled:opacity-60 transition-all"
