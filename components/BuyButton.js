@@ -43,20 +43,27 @@ function BuyForm({ productName, onClose }) {
   const { user } = useAuth()
   const [sent, setSent] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
   const [form, setForm] = useState({ name:'', phone:'', comment:`Интересует: ${productName}` })
 
   async function handleSubmit(e) {
     e.preventDefault()
-    setLoading(true)
+    setError(''); setLoading(true)
     try {
-      await fetch('/api/orders', {
+      const res = await fetch('/api/orders', {
         method:'POST',
         headers:{'Content-Type':'application/json'},
         body: JSON.stringify({...form, productName, userId: user?.id || null}),
       })
-    } catch {}
+      if (!res.ok) {
+        const d = await res.json().catch(() => ({}))
+        throw new Error(d.error || 'Не удалось отправить заявку')
+      }
+      setSent(true)
+    } catch (err) {
+      setError(err.message + '. Позвоните нам напрямую или попробуйте позже.')
+    }
     setLoading(false)
-    setSent(true)
   }
 
   if (sent) return (
@@ -82,6 +89,7 @@ function BuyForm({ productName, onClose }) {
         className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-100 transition-all"/>
       <textarea value={form.comment} onChange={e => setForm({...form, comment:e.target.value})}
         rows={3} className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-100 transition-all resize-none"/>
+      {error && <p className="text-sm text-red-600">{error}</p>}
       <label className="flex items-start gap-2 text-xs text-gray-500 cursor-pointer">
         <input type="checkbox" required className="mt-0.5 accent-teal-500"/>
         <span>Соглашаюсь с политикой обработки данных</span>
