@@ -13,6 +13,7 @@ export default function CartPage() {
   const [form, setForm] = useState({ name:'', phone:'', comment:'' })
   const [loading, setLoading] = useState(false)
   const [sent, setSent] = useState(false)
+  const [error, setError] = useState('')
   const [agree, setAgree] = useState(false)
 
   // Подставляем ФИО/телефон вошедшего пользователя
@@ -27,13 +28,13 @@ export default function CartPage() {
   async function submitOrder(e) {
     e.preventDefault()
     if (!form.name.trim() || !form.phone.trim() || !agree) return
-    setLoading(true)
+    setError(''); setLoading(true)
 
     const list = items.map(i => `• ${i.name} ×${i.qty}${i.price ? ` — ${formatPrice(i.price, i.priceFrom)}` : ''}`).join('\n')
     const comment = `Заказ из корзины (${count} поз.):\n${list}${total ? `\n\nИтого: ${total.toLocaleString('ru-RU')} ₽` : ''}${form.comment.trim() ? `\n\nКомментарий: ${form.comment.trim()}` : ''}`
 
     try {
-      await fetch('/api/orders', {
+      const res = await fetch('/api/orders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -44,10 +45,16 @@ export default function CartPage() {
           userId: user?.id || null,
         }),
       })
-    } catch {}
+      if (!res.ok) {
+        const d = await res.json().catch(() => ({}))
+        throw new Error(d.error || 'Не удалось отправить заявку')
+      }
+      setSent(true)
+      clear()
+    } catch (err) {
+      setError(err.message + '. Попробуйте позже или позвоните нам.')
+    }
     setLoading(false)
-    setSent(true)
-    clear()
   }
 
   return (
@@ -148,6 +155,7 @@ export default function CartPage() {
                     <input type="checkbox" checked={agree} onChange={e => setAgree(e.target.checked)} className="mt-0.5 accent-teal-500" />
                     <span>Соглашаюсь с политикой обработки данных</span>
                   </label>
+                  {error && <p className="text-sm text-red-600">{error}</p>}
                   <button type="submit" disabled={loading || !agree}
                     className="w-full py-3 rounded-xl text-white text-sm font-semibold hover:opacity-90 disabled:opacity-50 transition-all"
                     style={{background:'#3ECAB4'}}>
