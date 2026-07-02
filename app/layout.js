@@ -23,6 +23,9 @@ export const metadata = {
     title: 'Beauty Shape — Косметологическое оборудование',
     description: 'Профессиональное косметологическое оборудование с гарантией 1 год.',
   },
+  verification: {
+    yandex: '4016455ac3452052',
+  },
 }
 
 export default function RootLayout({ children }) {
