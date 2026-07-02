@@ -25,6 +25,7 @@ export const metadata = {
   },
   verification: {
     yandex: '4016455ac3452052',
+    google: 'google63f842a0980c5df4',
   },
 }
 
