@@ -26,7 +26,10 @@ export async function POST(request) {
     const tgChatId = process.env.TELEGRAM_CHAT_ID
     if (tgToken && tgChatId) {
       const text = ['🆕 *Новая заявка — Beauty Shape*','',`👤 Имя: ${name}`,`📞 Телефон: ${phone}`,productName?`📦 Товар: ${productName}`:'',comment?`💬 ${comment}`:'','',`🕐 ${new Date().toLocaleString('ru-RU',{timeZone:'Europe/Moscow'})}`].filter(Boolean).join('\n')
-      await fetch(`https://api.telegram.org/bot${tgToken}/sendMessage`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:tgChatId,text,parse_mode:'Markdown'})}).catch(console.error)
+      const chatIds = tgChatId.split(',').map(id => id.trim()).filter(Boolean)
+      await Promise.all(chatIds.map(id =>
+        fetch(`https://api.telegram.org/bot${tgToken}/sendMessage`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:id,text,parse_mode:'Markdown'})}).catch(console.error)
+      ))
     }
 
     return NextResponse.json({ ok: true })
