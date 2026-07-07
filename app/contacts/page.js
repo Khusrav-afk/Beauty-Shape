@@ -3,7 +3,6 @@ import { useState } from 'react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
-export const dynamic = 'force-dynamic'
 
 const PHONE = '+79002747119'
 const PHONE_DISPLAY = '+7 900 274-71-19'

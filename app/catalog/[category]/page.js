@@ -6,7 +6,7 @@ import { fetchProductsByCategory, fetchCategoryBySlug, formatPrice, COUNTRY_FLAG
 import CountryFlag from '@/components/CountryFlag'
 import { notFound } from 'next/navigation'
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 60
 
 export default async function CategoryPage({ params }) {
   const category = await fetchCategoryBySlug(params.category)

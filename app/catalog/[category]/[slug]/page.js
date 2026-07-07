@@ -6,7 +6,7 @@ import AddToCartButton from '@/components/AddToCartButton'
 import ProductGallery from '@/components/ProductGallery'
 import { fetchProductBySlug, fetchCategoryBySlug, fetchRelatedConsumables, formatPrice, needsPaidTraining, COUNTRY_NAMES } from '@/lib/catalog'
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 60
 
 export default async function ProductPage({ params }) {
   const product = await fetchProductBySlug(params.slug)

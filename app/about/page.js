@@ -1,7 +1,6 @@
 import Link from 'next/link'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-export const dynamic = 'force-dynamic'
 export const metadata = { title: 'О компании — Beauty Shape' }
 
 const TIMELINE = [

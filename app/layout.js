@@ -3,8 +3,6 @@ import BottomNav from '@/components/BottomNav'
 import { CartProvider } from '@/components/CartContext'
 import { AuthProvider } from '@/components/AuthContext'
 
-export const dynamic = 'force-dynamic'
-
 export const metadata = {
   metadataBase: new URL('https://beautyi-shape.ru'),
   title: 'Beauty Shape — Косметологическое оборудование',

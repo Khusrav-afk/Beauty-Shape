@@ -4,7 +4,7 @@ import Footer from '@/components/Footer'
 import { fetchCategories, fetchHitProducts, formatPrice, COUNTRY_FLAGS } from '@/lib/catalog'
 import CountryFlag from '@/components/CountryFlag'
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 60
 
 const CAT_COLORS = [
   '#3ECAB4', '#5B8DEF', '#F97B6B', '#A78BFA',
