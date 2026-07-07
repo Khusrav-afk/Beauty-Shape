@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import CountryFlag from './CountryFlag'
 
 export default function ProductGallery({ images = [], name, isHit, stock, flagSrc, country, countryName }) {
   const [active, setActive] = useState(0)
@@ -18,9 +19,9 @@ export default function ProductGallery({ images = [], name, isHit, stock, flagSr
         }`}>
           {stock > 0 ? 'В наличии' : 'Под заказ'}
         </span>
-        {flagSrc && (
+        {country && (
           <div className="absolute bottom-4 right-4 z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/80 backdrop-blur-sm shadow-sm">
-            <img src={flagSrc} alt={country} width={20} height={15} className="block w-5 h-auto rounded-sm" />
+            <CountryFlag code={country} className="block w-5 h-auto rounded-sm" />
             <span className="text-xs text-gray-600 font-medium">{countryName}</span>
           </div>
         )}
