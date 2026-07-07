@@ -5,7 +5,7 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { useCart } from '@/components/CartContext'
 import { useAuth } from '@/components/AuthContext'
-import { formatPrice } from '@/lib/catalog'
+import { formatPrice, cldOptimize } from '@/lib/catalog'
 
 export default function CartPage() {
   const { items, setQty, removeItem, clear, count, total, loaded } = useCart()
@@ -106,7 +106,7 @@ export default function CartPage() {
                   <Link href={`/catalog/${item.categorySlug}/${item.slug}`}
                     className="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0 flex items-center justify-center" style={{background:'#f0fdfb'}}>
                     {item.image
-                      ? <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                      ? <img src={cldOptimize(item.image, 200)} alt={item.name} className="w-full h-full object-cover" loading="lazy" />
                       : <span className="text-gray-300 text-xs">Фото</span>}
                   </Link>
                   <div className="flex-1 min-w-0">

@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import CountryFlag from './CountryFlag'
+import { cldOptimize } from '@/lib/catalog'
 
 export default function ProductGallery({ images = [], name, isHit, stock, flagSrc, country, countryName }) {
   const [active, setActive] = useState(0)
@@ -26,7 +27,7 @@ export default function ProductGallery({ images = [], name, isHit, stock, flagSr
           </div>
         )}
         {main ? (
-          <img src={main} alt={name} className="absolute inset-0 w-full h-full object-cover" />
+          <img src={cldOptimize(main, 900)} alt={name} className="absolute inset-0 w-full h-full object-cover" />
         ) : (
           <div className="text-center text-gray-300">
             <svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="mx-auto mb-3 opacity-30">
@@ -44,7 +45,7 @@ export default function ProductGallery({ images = [], name, isHit, stock, flagSr
           {images.map((img, i) => (
             <button key={i} onClick={() => setActive(i)}
               className={`w-16 h-16 rounded-xl overflow-hidden border-2 transition-colors ${i === active ? 'border-teal-400' : 'border-transparent'}`}>
-              <img src={img} alt="" className="w-full h-full object-cover" />
+              <img src={cldOptimize(img, 150)} alt="" className="w-full h-full object-cover" loading="lazy" />
             </button>
           ))}
         </div>

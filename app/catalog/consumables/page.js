@@ -3,7 +3,7 @@ import { useState, useMemo, useEffect } from 'react'
 import Link from 'next/link'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import { fetchProductsByCategory, formatPrice } from '@/lib/catalog'
+import { fetchProductsByCategory, formatPrice, cldOptimize } from '@/lib/catalog'
 
 // Все расходные материалы из каталога
 const CONSUMABLE_SLUGS = ['consumables']
@@ -154,7 +154,7 @@ export default function ConsumablesPage() {
                         : <span className="absolute top-2.5 right-2.5 z-10 px-2 py-0.5 text-xs font-semibold rounded-full bg-gray-100 text-gray-500">Под заказ</span>
                       }
                       {product.images && product.images.length > 0 ? (
-                        <img src={product.images[0]} alt={product.name} className="absolute inset-0 w-full h-full object-cover" />
+                        <img src={cldOptimize(product.images[0], 500)} alt={product.name} className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
                       ) : (
                         <div className="text-center text-gray-300">
                           <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="mx-auto mb-1.5 opacity-30">

@@ -4,7 +4,7 @@ import Footer from '@/components/Footer'
 import BuyButton from '@/components/BuyButton'
 import AddToCartButton from '@/components/AddToCartButton'
 import ProductGallery from '@/components/ProductGallery'
-import { fetchProductBySlug, fetchCategoryBySlug, fetchRelatedConsumables, formatPrice, needsPaidTraining, COUNTRY_NAMES } from '@/lib/catalog'
+import { fetchProductBySlug, fetchCategoryBySlug, fetchRelatedConsumables, formatPrice, needsPaidTraining, COUNTRY_NAMES, cldOptimize } from '@/lib/catalog'
 
 export const revalidate = 60
 
@@ -163,7 +163,7 @@ export default async function ProductPage({ params }) {
                         : <span className="absolute top-2 right-2 z-10 px-2 py-0.5 text-xs font-semibold rounded-full bg-gray-100 text-gray-500">Под заказ</span>
                       }
                       {item.images && item.images.length > 0 ? (
-                        <img src={item.images[0]} alt={item.name} className="absolute inset-0 w-full h-full object-cover" />
+                        <img src={cldOptimize(item.images[0], 400)} alt={item.name} className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
                       ) : (
                         <div className="text-center text-gray-300">
                           <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="mx-auto mb-1.5 opacity-30">

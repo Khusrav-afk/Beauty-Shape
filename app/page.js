@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import { fetchCategories, fetchHitProducts, formatPrice, COUNTRY_FLAGS } from '@/lib/catalog'
+import { fetchCategories, fetchHitProducts, formatPrice, COUNTRY_FLAGS, cldOptimize } from '@/lib/catalog'
 import CountryFlag from '@/components/CountryFlag'
 
 export const revalidate = 60
@@ -191,7 +191,7 @@ export default async function HomePage() {
 
                       {/* Фото или заглушка */}
                       {product.images && product.images.length > 0 ? (
-                        <img src={product.images[0]} alt={product.name} className="absolute inset-0 w-full h-full object-cover" />
+                        <img src={cldOptimize(product.images[0], 500)} alt={product.name} className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
                       ) : (
                         <div className="text-center text-gray-300">
                           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="mx-auto mb-2 opacity-30">
